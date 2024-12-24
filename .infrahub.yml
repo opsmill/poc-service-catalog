@@ -1,0 +1,16 @@
+# yaml-language-server: $schema=https://schema.infrahub.app/python-sdk/repository-config/latest.json
+---
+# GENERATORS
+generator_definitions:
+  - name: dedicated_internet_generator
+    file_path: "generators/implement_dedicated_internet.py"
+    targets: automated_dedicated_internet
+    query: dedicated-internet-info
+    class_name: DedicatedInternetGenerator
+    parameters:
+      service_identifier: "service_identifier__value"
+
+# QUERIES
+queries:
+  - name: dedicated-internet-info
+    file_path: "generators/dedicated_internet.gql"

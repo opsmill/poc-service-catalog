@@ -1,0 +1,87 @@
+query DedicatedInternetQuery($service_identifier: String!) {
+  ServiceDedicatedInternet(service_identifier__value: $service_identifier) {
+    edges {
+      node {
+        id
+        service_identifier {
+          value
+        }
+        account_reference {
+          value
+        }
+        __typename
+        ip_package {
+          value
+        }
+        location {
+          node {
+            __typename
+            name {
+              value
+            }
+            id
+          }
+        }
+        bandwidth {
+          value
+        }
+        dedicated_interfaces {
+          count
+          edges {
+            node {
+              id
+              __typename
+              name {
+                value
+              }
+              speed {
+                value
+              }
+              description {
+                value
+              }
+              ... on DcimInterfaceL2 {
+                l2_mode {
+                  value
+                }
+                role {
+                  value
+                }
+                status {
+                  value
+                }
+                device {
+                  node {
+                    ... on DcimDevice {
+                      role {
+                        value
+                      }
+                    }
+                  }
+                }
+              }
+              ... on DcimInterfaceL3 {
+                role {
+                  value
+                }
+                status {
+                  value
+                }
+                ip_addresses {
+                  edges {
+                    node {
+                      id
+                      address {
+                        value
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
