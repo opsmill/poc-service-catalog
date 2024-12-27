@@ -37,6 +37,27 @@ nodes:
       - ServiceGeneric
     include_in_menu: true
     attributes:
+      - name: status
+        kind: Dropdown
+        optional: false
+        default_value: draft
+        order_weight: 1050
+        choices:
+          - name: draft
+            label: Draft
+            color: "#D3D3D3"
+          - name: in-delivery
+            label: In Delivery
+            color: "#A8E6A2"
+          - name: active
+            label: Active
+            color: "#66CC66"
+          - name: in-decomissioning
+            label: In Decomissioning
+            color: "#FFAB59"
+          - name: decomissioned
+            label: Decomissioned
+            color: "#FF6B6B"
       - name: bandwidth
         kind: Dropdown
         optional: false
