@@ -11,13 +11,6 @@ st.write(
     "You will find on this page all services requests opened. For the one delivered you'll also find allocated assets."
 )
 
-in_progress = asyncio.run(
-    filter_nodes(
-        kind="CoreProposedChange",
-        filters={"tags__name__values": ["service_request"]},
-    )
-)
-
 
 def get_service_requests() -> list[dict]:
     data: list[dict] = []
