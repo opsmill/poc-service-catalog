@@ -28,17 +28,6 @@ def get_locations_options():
     return [site.shortname.value for site in site_list]
 
 
-def get_bandwidth_options():
-    site_list = asyncio.run(
-        filter_nodes(
-            kind="LocationSite",
-            filters={},
-        )
-    )
-
-    return [site.shortname.value for site in site_list]
-
-
 with st.form("new_dedicated_internet_form"):
     # Identifiers
     service_identifier = st.text_input("Service Identifier")
@@ -108,6 +97,7 @@ if submitted:
             "source_branch": branch_name,
             "description": "This request is coming from service catalog form!",
             "destination_branch": "main",
+            "tags": ["service_request"],
         }
 
         proposed_change_obj = asyncio.run(

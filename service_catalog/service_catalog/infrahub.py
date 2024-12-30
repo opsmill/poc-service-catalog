@@ -62,9 +62,20 @@ async def create_and_save(
 
 @with_client
 async def filter_nodes(
-    client: InfrahubClient, kind: str, filters: dict, branch: str = "main"
+    client: InfrahubClient,
+    kind: str,
+    filters: dict = {},
+    include: list[str] = None,
+    branch: str = "main",
 ) -> list[InfrahubNode]:
-    return await client.filters(kind=kind, branch=branch, **filters)
+    return await client.filters(
+        kind=kind,
+        branch=branch,
+        include=include,
+        prefetch_relationships=True,
+        populate_store=True,
+        **filters,
+    )
 
 
 @with_client
@@ -84,5 +95,4 @@ async def get_dropdown_options(
         Exception(f"Can't find attribute `{attribute_name}` for kind `{kind}`")
     else:
         # Otherwise return choices
-        print(matched_attribute.choices)
         return [choice["name"] for choice in matched_attribute.choices]
