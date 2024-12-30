@@ -1,6 +1,5 @@
 import random
 
-from infrahub_sdk import InfrahubClient
 from infrahub_sdk.generator import InfrahubGenerator
 from infrahub_sdk.node import InfrahubNode
 from infrahub_sdk.protocols import CoreIPPrefixPool, CoreNumberPool
@@ -10,43 +9,6 @@ SERVICE_VLAN_POOL: str = "Customer vlan pool"
 SERVICE_PREFIX_POOL: str = "Customer prefixes pool"
 
 IP_PACKAGE_TO_PREFIX_SIZE: dict[str, int] = {"small": 29, "medium": 28, "large": 27}
-IP_PACKAGE_TO_PREFIX_SIZE: dict[str, int] = {"small": 29, "medium": 28, "large": 27}
-
-
-class ServiceBuilder:
-    def __init__(
-        self,
-        client: InfrahubClient,
-        customer_service: InfrahubNode,
-    ) -> None:
-        # Save parameters
-        self.client = client
-        self.customer_service = customer_service
-        self.allocated_vlan = None
-        self.allocated_prefix = None
-
-    async def allocate_vlan(self) -> None:
-        """Create a VLAN with ID coming from the pool provided and assign this VLAN to the service."""
-        # Get resource pool
-        resource_pool = await self.client.get(
-            kind=CoreNumberPool,
-            name__value=SERVICE_VLAN_POOL,
-        )
-
-        # Craft and save the vlan
-        self.allocated_vlan = await self.client.create(
-            kind="IpamVLAN",
-            name=f"vlan__{self.customer_service.service_identifier.value}",
-            vlan_id=resource_pool,  # Here we get the vlan ID from the pool
-            description=f"VLAN allocated to service {self.customer_service.service_identifier.value}",
-            status=ACTIVE_STATUS,
-            role="customer",
-            l2domain=["default"],
-            service=self.customer_service,
-        )
-
-        # And save it to Infrahub
-        await self.allocated_vlan.save(allow_upsert=True)
 
 
 class DedicatedInternetGenerator(InfrahubGenerator):
@@ -76,6 +38,10 @@ class DedicatedInternetGenerator(InfrahubGenerator):
 
         # Create L3 interface for gateway
         await self.allocate_gateway()
+
+        # Move the service as active
+        self.customer_service.status.value = "active"
+        await self.customer_service.save(allow_upsert=True)
 
     async def allocate_vlan(self) -> None:
         """Create a VLAN with ID coming from the pool provided and assign this VLAN to the service."""
