@@ -81,6 +81,7 @@ if submitted:
             "status": "draft",
             "bandwidth": bandwidth,
             "ip_package": ip_package,
+            "member_of_groups": ["automated_dedicated_internet"],
             "location": [location],
         }
         service_obj = asyncio.run(
