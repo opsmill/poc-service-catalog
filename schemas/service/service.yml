@@ -164,3 +164,8 @@ extensions:
           cardinality: one
           direction: outbound
           identifier: service_prefix
+    - kind: CoreProposedChange
+      relationships:
+        - name: tags
+          peer: BuiltinTag
+          cardinality: many
