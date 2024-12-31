@@ -200,6 +200,12 @@ async def create_org(client: InfrahubClient, log: logging.Logger, branch: str) -
 
         await device_type_obj.save(allow_upsert=True)
 
+    group_obj = await client.create(
+        kind="CoreStandardGroup",
+        name="automated_dedicated_internet",
+    )
+    await group_obj.save(allow_upsert=True)
+
 
 async def create_location(
     client: InfrahubClient, log: logging.Logger, branch: str

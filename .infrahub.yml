@@ -14,3 +14,10 @@ generator_definitions:
 queries:
   - name: dedicated-internet-info
     file_path: "generators/dedicated_internet.gql"
+
+# SCHEMAS
+schemas:
+  - schemas/base
+  - schemas/location_minimal
+  - schemas/vlan
+  - schemas/service
