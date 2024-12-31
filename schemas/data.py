@@ -206,6 +206,12 @@ async def create_org(client: InfrahubClient, log: logging.Logger, branch: str) -
     )
     await group_obj.save(allow_upsert=True)
 
+    tag_obj = await client.create(
+        kind="BuiltinTag",
+        name="service_request",
+    )
+    await tag_obj.save(allow_upsert=True)
+
 
 async def create_location(
     client: InfrahubClient, log: logging.Logger, branch: str

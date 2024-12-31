@@ -176,13 +176,10 @@ class DedicatedInternetGenerator(InfrahubGenerator):
             index__value=self.index,
         )
 
-        # FIXME: https://github.com/opsmill/infrahub-sdk-python/issues/66
-        vlan_id: int = self.allocated_vlan.vlan_id.value["value"]
-
         # Create interface
         gateway_interface = await self.client.create(
             kind="DcimInterfaceL3",
-            name=f"vlan{vlan_id}",
+            name=f"vlan_{self.allocated_vlan.vlan_id.value}",
             speed=1000,
             device=router,
             status="active",

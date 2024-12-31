@@ -6,14 +6,9 @@
 
 ## spin
 
-```bash
-infrahubctl schema load schemas/base
-infrahubctl schema load schemas/location_minimal
-infrahubctl schema load schemas/vlan
-infrahubctl schema load schemas/service
-
-infrahubctl run schemas/data.py
-```
+- Create `automated_dedicated_internet` group
+- Connect repository
+- Load data `infrahubctl run schemas/data.py`
 
 ## Abstract
 

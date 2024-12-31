@@ -73,6 +73,9 @@ def render_asset_table(data: dict) -> None:
 # Get the data
 data = get_service_requests()
 
+if len(data) == 0:
+    st.write("There is currently no service requests ...")
+
 # Render the containers
 for service_request in data:
     with st.container(border=True):
