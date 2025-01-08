@@ -44,7 +44,7 @@ async def get_all_branches(client: InfrahubClient) -> dict[str, BranchData]:
 
 @with_client
 async def create_branch(client: InfrahubClient, branch_name: str) -> BranchData:
-    return await client.branch.create(branch_name=branch_name)
+    return await client.branch.create(branch_name=branch_name, sync_with_git=False)
 
 
 @with_client
