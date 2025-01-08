@@ -1,3 +1,4 @@
+import logging
 import random
 
 from infrahub_sdk.generator import InfrahubGenerator
@@ -13,9 +14,14 @@ IP_PACKAGE_TO_PREFIX_SIZE: dict[str, int] = {"small": 29, "medium": 28, "large":
 
 class DedicatedInternetGenerator(InfrahubGenerator):
     customer_service = None
+    log = logging.getLogger("infrahub.tasks")
 
     async def generate(self, data: dict) -> None:
         service_dict: dict = data["ServiceDedicatedInternet"]["edges"][0]["node"]
+
+        self.log.info("info")
+        self.log.debug("debug")
+        self.log.warning("warning")
 
         # Translate the dict to proper object
         self.customer_service = await InfrahubNode.from_graphql(
@@ -69,6 +75,8 @@ class DedicatedInternetGenerator(InfrahubGenerator):
     async def allocate_prefix(self) -> None:
         """Allocate a prefix coming from a resource pool to the service."""
 
+        self.log.info("Allocating prefix from pool...")
+
         # Get resource pool
         resource_pool = await self.client.get(
             kind=CoreIPPrefixPool,
@@ -91,6 +99,8 @@ class DedicatedInternetGenerator(InfrahubGenerator):
             prefix_length=self.prefix_length,
             identifier=self.customer_service.service_identifier.value,
         )
+
+        self.log.info(f"Prefix `{self.allocated_prefix}` assigned!")
 
         await self.allocated_prefix.save(allow_upsert=True)
 
@@ -144,9 +154,11 @@ class DedicatedInternetGenerator(InfrahubGenerator):
 
             # If we don't have any interface available
             if selected_interface is None:
-                raise Exception(
+                msg: str = (
                     f"There is no physical port to allocate to customer on {switch}"
                 )
+                self.log.exception(msg)
+                raise Exception(msg)
             else:
                 allocated_port = selected_interface
 
@@ -176,10 +188,12 @@ class DedicatedInternetGenerator(InfrahubGenerator):
             index__value=self.index,
         )
 
+        vlan_id: int = self.allocated_vlan.vlan_id.value["value"]
+
         # Create interface
         gateway_interface = await self.client.create(
             kind="DcimInterfaceL3",
-            name=f"vlan_{self.allocated_vlan.vlan_id.value}",
+            name=f"vlan_{str(vlan_id)}",
             speed=1000,
             device=router,
             status="active",
