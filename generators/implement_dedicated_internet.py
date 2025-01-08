@@ -190,9 +190,9 @@ class DedicatedInternetGenerator(InfrahubGenerator):
 
         # Work around issue
         if isinstance(self.allocated_vlan.vlan_id.value, int):
-            vlan_id: int = self.allocated_vlan.vlan_id.value["value"]
-        else:
             vlan_id: int = self.allocated_vlan.vlan_id.value
+        else:
+            vlan_id: int = self.allocated_vlan.vlan_id.value["value"]
 
         # Create interface
         gateway_interface = await self.client.create(
