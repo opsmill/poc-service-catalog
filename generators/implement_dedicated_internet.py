@@ -189,7 +189,7 @@ class DedicatedInternetGenerator(InfrahubGenerator):
         )
 
         # Work around issue
-        if "value" in self.allocated_vlan.vlan_id.value:
+        if isinstance(self.allocated_vlan.vlan_id.value, int):
             vlan_id: int = self.allocated_vlan.vlan_id.value["value"]
         else:
             vlan_id: int = self.allocated_vlan.vlan_id.value
