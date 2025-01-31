@@ -19,10 +19,6 @@ class DedicatedInternetGenerator(InfrahubGenerator):
     async def generate(self, data: dict) -> None:
         service_dict: dict = data["ServiceDedicatedInternet"]["edges"][0]["node"]
 
-        self.log.info("info")
-        self.log.debug("debug")
-        self.log.warning("warning")
-
         # Translate the dict to proper object
         self.customer_service = await InfrahubNode.from_graphql(
             client=self.client, data=service_dict, branch=self.branch
@@ -110,6 +106,9 @@ class DedicatedInternetGenerator(InfrahubGenerator):
 
         # Fetch interfaces records
         await self.customer_service.dedicated_interfaces.fetch()
+        self.log.info(
+            f"There are {len(self.customer_service.dedicated_interfaces.peers)} interfaces attached to this service."
+        )
 
         # If we have any interface attached to the service
         if len(self.customer_service.dedicated_interfaces.peers) > 0:
@@ -119,6 +118,9 @@ class DedicatedInternetGenerator(InfrahubGenerator):
                 await interface.peer.device.fetch()
                 # If the device is "core"
                 if interface.peer.device.peer.role.value == "core":
+                    self.log.info(
+                        f"Found {interface} is already allocated to the port."
+                    )
                     # Big assomption but we assume port is already allocated
                     self.index = interface.peer.device.peer.index.value
                     allocated_port = interface
@@ -126,6 +128,8 @@ class DedicatedInternetGenerator(InfrahubGenerator):
 
         # If we don't have yet a port, we need to find one
         if allocated_port is None:
+            self.log.info("Haven't found any port allocated to this service.")
+
             # Here, we pick randomly. In a real-life scenario, we might want to give this more thought
             self.index = random.randint(1, 2)
 
@@ -136,6 +140,7 @@ class DedicatedInternetGenerator(InfrahubGenerator):
                 role__value="core",
                 index__value=self.index,
             )
+            self.log.info(f"Looking for an interface on {switch}...")
 
             # Fetch switch interface data
             await switch.interfaces.fetch()
@@ -145,9 +150,9 @@ class DedicatedInternetGenerator(InfrahubGenerator):
                 (
                     interface
                     for interface in switch.interfaces.peers
-                    if interface.get().role.value == "customer"
-                    and interface.get().status.value == "free"
-                    and interface.get().service.id is None
+                    if interface.role.value == "customer"
+                    and interface.status.value == "free"
+                    and interface.service.id is None
                 ),
                 None,  # Default value if no match is found
             )
@@ -160,6 +165,9 @@ class DedicatedInternetGenerator(InfrahubGenerator):
                 self.log.exception(msg)
                 raise Exception(msg)
             else:
+                self.log.info(
+                    f"Found port {selected_interface} to allocate to the service."
+                )
                 allocated_port = selected_interface
 
         allocated_port = allocated_port.peer

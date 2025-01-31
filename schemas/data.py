@@ -372,6 +372,7 @@ async def create_devices(
                 status="active",
                 role="edge",
                 location=site,
+                device_type=["Generic router"],
                 primary_address=management_pool,
                 index=i,
             )
@@ -389,6 +390,7 @@ async def create_devices(
                 status="active",
                 role="core",
                 location=site,
+                device_type=["Generic switch"],
                 primary_address=management_pool,
                 index=i,
             )

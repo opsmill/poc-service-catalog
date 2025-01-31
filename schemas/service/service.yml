@@ -21,10 +21,12 @@ generics:
         unique: true
         order_weight: 1000
         optional: false
+        branch: agnostic
       - name: account_reference
         kind: Text
         order_weight: 1000
         optional: false
+        branch: agnostic
 
 nodes:
   - name: DedicatedInternet
@@ -36,6 +38,7 @@ nodes:
     inherit_from:
       - ServiceGeneric
     include_in_menu: true
+    branch: agnostic
     attributes:
       - name: status
         kind: Dropdown
@@ -63,6 +66,7 @@ nodes:
         optional: false
         default_value: "1000"
         order_weight: 1100
+        branch: aware
         choices:
           - name: "100"
             label: Hundred Megabits
@@ -78,6 +82,7 @@ nodes:
         optional: false
         order_weight: 1120
         default_value: small
+        branch: aware
         choices:
           - name: small
             label: Small
@@ -99,6 +104,7 @@ nodes:
         direction: inbound
         identifier: service_site
         optional: false
+        branch: agnostic
       - name: dedicated_interfaces
         peer: DcimInterface
         kind: Attribute
@@ -136,6 +142,7 @@ extensions:
           cardinality: many
           direction: outbound
           identifier: service_site
+          branch: agnostic
     - kind: DcimInterface
       relationships:
         - name: service
