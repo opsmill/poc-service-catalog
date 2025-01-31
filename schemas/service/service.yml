@@ -24,7 +24,7 @@ generics:
         branch: agnostic
       - name: account_reference
         kind: Text
-        order_weight: 1000
+        order_weight: 1010
         optional: false
         branch: agnostic
 
@@ -45,6 +45,9 @@ nodes:
         optional: false
         default_value: draft
         order_weight: 1050
+        # Putting this one as branch aware otherwise generator put it as active in the branch and so on main as well
+        # even tho the service is really active only when the branch is merged...
+        branch: aware
         choices:
           - name: draft
             label: Draft
@@ -64,7 +67,6 @@ nodes:
       - name: bandwidth
         kind: Dropdown
         optional: false
-        default_value: "1000"
         order_weight: 1100
         branch: aware
         choices:
@@ -81,7 +83,6 @@ nodes:
         kind: Dropdown
         optional: false
         order_weight: 1120
-        default_value: small
         branch: aware
         choices:
           - name: small
