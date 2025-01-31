@@ -48,6 +48,9 @@ class DedicatedInternetGenerator(InfrahubGenerator):
 
     async def allocate_vlan(self) -> None:
         """Create a VLAN with ID coming from the pool provided and assign this VLAN to the service."""
+
+        self.log.info("Allocating VLAN to this service...")
+
         # Get resource pool
         resource_pool = await self.client.get(
             kind=CoreNumberPool,
@@ -65,6 +68,8 @@ class DedicatedInternetGenerator(InfrahubGenerator):
             l2domain=["default"],
             service=self.customer_service,
         )
+
+        self.log.info(f"VLAN `{self.allocated_vlan}` assigned!")
 
         # And save it to Infrahub
         await self.allocated_vlan.save(allow_upsert=True)
@@ -104,6 +109,8 @@ class DedicatedInternetGenerator(InfrahubGenerator):
     async def allocate_port(self) -> None:
         """Allocate a port to the service."""
         allocated_port = None
+
+        self.log.info("Allocating port to this service...")
 
         # Fetch interfaces records
         await self.customer_service.dedicated_interfaces.fetch()
@@ -187,7 +194,9 @@ class DedicatedInternetGenerator(InfrahubGenerator):
         await allocated_port.save(allow_upsert=True)
 
     async def allocate_gateway(self) -> None:
-        """Allocate a port to the service."""
+        """Allocate a gateway to the service."""
+
+        self.log.info("Allocating gateway to this service...")
 
         # Find the corresponding router
         router = await self.client.get(
@@ -229,6 +238,8 @@ class DedicatedInternetGenerator(InfrahubGenerator):
             interface=gateway_interface,
         )
         await self.gateway_ip.save(allow_upsert=True)
+
+        self.log.info(f"Gateway `{self.gateway_ip}` assigned!")
 
         # Add gateway to prefix
         self.allocated_prefix.gateway = self.gateway_ip
