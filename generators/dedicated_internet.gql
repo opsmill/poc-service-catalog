@@ -3,6 +3,9 @@ query DedicatedInternetQuery($service_identifier: String!) {
     edges {
       node {
         id
+        status {
+          value
+        }
         service_identifier {
           value
         }

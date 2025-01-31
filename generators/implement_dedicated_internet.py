@@ -27,7 +27,7 @@ class DedicatedInternetGenerator(InfrahubGenerator):
         # Move the service as active
         # TODO: Not happy with ahving this one here...
         self.customer_service.status.value = "active"
-        await self.customer_service.save()
+        await self.customer_service.save(allow_upsert=True)
 
         # Allocate the VLAN to the service
         await self.allocate_vlan()
