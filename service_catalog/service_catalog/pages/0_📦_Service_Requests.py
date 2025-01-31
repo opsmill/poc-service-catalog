@@ -1,5 +1,6 @@
 import asyncio
 
+import pandas as pd
 import streamlit as st
 
 from service_catalog.infrahub import filter_nodes
@@ -12,83 +13,97 @@ st.write(
 )
 
 
-def get_service_requests() -> list[dict]:
-    data: list[dict] = []
-
-    # First we get in progress requests
-    in_progress_requests = asyncio.run(
-        filter_nodes(
-            kind="CoreProposedChange",
-            filters={"tags__name__values": ["service_request"], "state__value": "open"},
-        )
-    )
-
-    for req in in_progress_requests:
-        line: dict = {"title": req.name.value, "status": "in-delivery"}
-        data.append(line)
-
-    # Then we get services that are existing in main branch
-    # TODO: Here we only display that particular type of service
-    # might need to be extended later one
-    delivered_services = asyncio.run(
-        filter_nodes(
-            kind="ServiceDedicatedInternet",
-            include=["prefix"],
-        )
-    )
-
-    # Build the data to be displayed
-    for srv in delivered_services:
-        # TODO: Manage case where we don't have prefix assigned for instance
-        line: dict = {
-            "title": srv.service_identifier.value,
-            "status": srv.status.value,
-            "assets": {},
-        }
-
-        # Manage interfaces
-        interfaces_value: list = []
-        for interface in srv.dedicated_interfaces.peers:
-            interfaces_value.append(
-                f"{interface.peer.device.hfid[0]}.{interface.peer.name.value}"
-            )
-        line["assets"]["interfaces"] = "; ".join(interfaces_value)
-
-        # Manage prefix
-        line["assets"]["prefix"] = srv.prefix.peer.display_label
-
-        # Manage gateway
-        line["assets"]["gateway"] = srv.gateway_ip_address.peer.display_label
-
-        # Add line to overall result
-        data.append(line)
-
-    return data
-
-
 def render_asset_table(data: dict) -> None:
-    st.table(data=data)
+    if data:
+        dedicated_interfaces: list = []
+
+        if (
+            data.dedicated_interfaces.initialized
+            and len(data.dedicated_interfaces.peers) > 0
+        ):
+            for interface in data.dedicated_interfaces.peers:
+                dedicated_interfaces.append(
+                    f"{interface.peer.device.hfid[0]}.{interface.peer.name.value}"
+                )
+        df = pd.DataFrame(
+            {
+                "vlan": [
+                    data.vlan.peer.display_label if data.vlan.initialized else None
+                ],
+                "gateway_ip_address": [
+                    data.gateway_ip_address.peer.display_label
+                    if data.gateway_ip_address.initialized
+                    else None
+                ],
+                "prefix": [
+                    data.prefix.peer.display_label if data.prefix.initialized else None
+                ],
+                "dedicated_interfaces": [dedicated_interfaces],
+            }
+        )
+        st.dataframe(
+            df,
+            column_config={
+                "vlan": "Vlan",
+                "gateway_ip_address": "Gateway Ip Address",
+                "prefix": "Prefix",
+                "dedicated_interfaces": st.column_config.ListColumn(
+                    "Dedicated Interfaces",
+                ),
+            },
+            hide_index=True,
+        )
+
+
+def render_details_table(data: dict) -> None:
+    if data:
+        st.dataframe(
+            pd.DataFrame(
+                {
+                    "service_id": [data.service_identifier.value],
+                    "account_ref": [
+                        data.account_reference.value,
+                    ],
+                    "status": [data.status.value],
+                    "location": [data.location.peer.display_label],
+                    "bandwidth": [data.bandwidth.value],
+                    "ip_package": [data.ip_package.value],
+                }
+            ),
+            column_config={
+                "service_id": "Service Identifier",
+                "account_id": "Account Identifier",
+                "status": "Status",
+                "location": "Location",
+                "bandwidth": "Bandwidth",
+                "ip_package": "Ip Package",
+            },
+            hide_index=True,
+        )
 
 
 # Get the data
-data = get_service_requests()
+services = asyncio.run(
+    filter_nodes(
+        kind="ServiceDedicatedInternet",  # TODO: So far we only manage this kind
+        include=["prefix", "interfaces"],
+    )
+)
 
-if len(data) == 0:
-    st.write("There is currently no service requests ...")
+if len(services) == 0:
+    st.warning("There is currently no service ...")
 
 # Render the containers
-for service_request in data:
+for service in services:
     with st.container(border=True):
         # Display title
-        st.title(service_request["title"])
+        st.title(service.service_identifier.value)
 
-        # Display based on status
-        if service_request["status"] == "in-delivery":
-            # For service in delivery we don't display assets
-            st.warning("This service is currently being implemented...")
-        elif service_request["status"] == "active":
-            st.success("This is service is active!")
-            render_asset_table(service_request["assets"])
-        elif service_request["status"] in ["in-decomissioning", "decomissioned"]:
-            st.warning(f"This is service is {service_request["status"]}!")
-            render_asset_table(service_request["assets"])
+        render_details_table(service)
+
+        st.write("#### Assets")
+
+        if service.status.value == "draft":
+            st.warning("Service is in the building process ...")
+        else:
+            render_asset_table(service)
