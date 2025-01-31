@@ -518,7 +518,6 @@ nodes:
         kind: Dropdown
         optional: true
         order_weight: 1300
-        branch: agnostic
         choices:
           - name: active
             label: Active

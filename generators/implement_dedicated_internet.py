@@ -24,6 +24,11 @@ class DedicatedInternetGenerator(InfrahubGenerator):
             client=self.client, data=service_dict, branch=self.branch
         )
 
+        # Move the service as active
+        # TODO: Not happy with ahving this one here...
+        self.customer_service.status.value = "active"
+        await self.customer_service.save()
+
         # Allocate the VLAN to the service
         await self.allocate_vlan()
 
@@ -40,10 +45,6 @@ class DedicatedInternetGenerator(InfrahubGenerator):
 
         # Create L3 interface for gateway
         await self.allocate_gateway()
-
-        # # Move the service as active
-        # self.customer_service.status.value = "active"
-        # await self.customer_service.save(allow_upsert=True)
 
     async def allocate_vlan(self) -> None:
         """Create a VLAN with ID coming from the pool provided and assign this VLAN to the service."""
