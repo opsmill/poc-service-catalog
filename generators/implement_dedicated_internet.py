@@ -72,7 +72,7 @@ class DedicatedInternetGenerator(InfrahubGenerator):
         # And save it to Infrahub
         await self.allocated_vlan.save(allow_upsert=True)
 
-        self.log.info(f"VLAN `{self.allocated_vlan}` assigned!")
+        self.log.info(f"VLAN `{self.allocated_vlan.vlan_id.value}` assigned!")
 
     async def allocate_prefix(self) -> None:
         """Allocate a prefix coming from a resource pool to the service."""
