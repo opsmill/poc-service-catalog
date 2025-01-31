@@ -150,9 +150,9 @@ class DedicatedInternetGenerator(InfrahubGenerator):
                 (
                     interface
                     for interface in switch.interfaces.peers
-                    if interface.role.value == "customer"
-                    and interface.status.value == "free"
-                    and interface.service.id is None
+                    if interface.peer.role.value == "customer"
+                    and interface.peer.status.value == "free"
+                    and interface.peer.service.id is None
                 ),
                 None,  # Default value if no match is found
             )
