@@ -41,9 +41,9 @@ class DedicatedInternetGenerator(InfrahubGenerator):
         # Create L3 interface for gateway
         await self.allocate_gateway()
 
-        # Move the service as active
-        self.customer_service.status.value = "active"
-        await self.customer_service.save(allow_upsert=True)
+        # # Move the service as active
+        # self.customer_service.status.value = "active"
+        # await self.customer_service.save(allow_upsert=True)
 
     async def allocate_vlan(self) -> None:
         """Create a VLAN with ID coming from the pool provided and assign this VLAN to the service."""
@@ -119,7 +119,7 @@ class DedicatedInternetGenerator(InfrahubGenerator):
                 # If the device is "core"
                 if interface.peer.device.peer.role.value == "core":
                     self.log.info(
-                        f"Found {interface} is already allocated to the port."
+                        f"Found {interface.peer.display_name} already allocated to the service."
                     )
                     # Big assomption but we assume port is already allocated
                     self.index = interface.peer.device.peer.index.value
@@ -166,7 +166,7 @@ class DedicatedInternetGenerator(InfrahubGenerator):
                 raise Exception(msg)
             else:
                 self.log.info(
-                    f"Found port {selected_interface} to allocate to the service."
+                    f"Found port {selected_interface.peer.display_name} to allocate to the service."
                 )
                 allocated_port = selected_interface
 
