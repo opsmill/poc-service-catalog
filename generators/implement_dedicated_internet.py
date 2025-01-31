@@ -119,7 +119,7 @@ class DedicatedInternetGenerator(InfrahubGenerator):
                 # If the device is "core"
                 if interface.peer.device.peer.role.value == "core":
                     self.log.info(
-                        f"Found {interface.peer.display_name} already allocated to the service."
+                        f"Found {interface.peer.display_label} already allocated to the service."
                     )
                     # Big assomption but we assume port is already allocated
                     self.index = interface.peer.device.peer.index.value
@@ -166,7 +166,7 @@ class DedicatedInternetGenerator(InfrahubGenerator):
                 raise Exception(msg)
             else:
                 self.log.info(
-                    f"Found port {selected_interface.peer.display_name} to allocate to the service."
+                    f"Found port {selected_interface.peer.display_label} to allocate to the service."
                 )
                 allocated_port = selected_interface
 
