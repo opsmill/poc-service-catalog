@@ -16,6 +16,6 @@ This repository is a proof of concept for service catalog built while writting a
 - Setup your poetry environment `poetry shell` and `poetry install`
 - Export credentials `export INFRAHUB_ADDRESS='http://localhost:8000'; export INFRAHUB_API_TOKEN='06438eb2-8019-4776-878c-0941b1f1d1ec'`
 - Load data using CTL `infrahubctl run ../schemas/data.py`
-- Spin service catalog app `streamlit run service_catalog/landing.py`
+- Spin service catalog app `streamlit run service_catalog/🏠_Home_Page.py`
 
-At this point you can connect to service catalog on port 8501 [http://localhost:8501/](Service catalog)
+At this point you can connect to service catalog on port 8501 [Service catalog](http://localhost:8501/)
