@@ -1,6 +1,6 @@
 # POC Service catalog
 
-This repository is a proof of concept for service catalog built while writting a blog post.
+This repository is a proof of concept for service catalog using Infrahub and Streamlit.
 
 > [!NOTE]
 > Setting up the demo currently requires multiple steps, but we are working on adding it as a track on our [lab portal](https://opsmill.instruqt.com/pages/labs).
