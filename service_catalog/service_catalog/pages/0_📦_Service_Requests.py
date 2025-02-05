@@ -27,8 +27,8 @@ def render_asset_table(data: dict) -> None:
                 )
         df = pd.DataFrame(
             {
-                "vlan": [
-                    data.vlan.peer.display_label if data.vlan.initialized else None
+                "vlan_id": [
+                    data.vlan.peer.vlan_id.value if data.vlan.initialized else None
                 ],
                 "gateway_ip_address": [
                     data.gateway_ip_address.peer.display_label
@@ -44,7 +44,9 @@ def render_asset_table(data: dict) -> None:
         st.dataframe(
             df,
             column_config={
-                "vlan": "Vlan",
+                "vlan_id": st.column_config.TextColumn(
+                    "Vlan ID",
+                ),
                 "gateway_ip_address": "Gateway Ip Address",
                 "prefix": "Prefix",
                 "dedicated_interfaces": st.column_config.ListColumn(
