@@ -1,5 +1,11 @@
+from __future__ import annotations
+
 import logging
 import random
+
+from infrahub_sdk.generator import InfrahubGenerator
+from infrahub_sdk.node import InfrahubNode
+from infrahub_sdk.protocols import CoreIPPrefixPool, CoreNumberPool
 
 from protocols.asynchronous import (
     ServiceDedicatedInternet,
@@ -10,9 +16,6 @@ from protocols.asynchronous import (
     DcimInterfaceL2,
     DcimInterfaceL3,
 )
-from infrahub_sdk.generator import InfrahubGenerator
-from infrahub_sdk.node import InfrahubNode
-from infrahub_sdk.protocols import CoreIPPrefixPool, CoreNumberPool
 
 ACTIVE_STATUS = "active"
 SERVICE_VLAN_POOL: str = "Customer vlan pool"
@@ -22,7 +25,6 @@ IP_PACKAGE_TO_PREFIX_SIZE: dict[str, int] = {"small": 29, "medium": 28, "large":
 
 
 class DedicatedInternetGenerator(InfrahubGenerator):
-    customer_service = None
     log = logging.getLogger("infrahub.tasks")
 
     async def generate(self, data: dict) -> None:

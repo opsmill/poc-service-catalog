@@ -1,7 +1,12 @@
+from __future__ import annotations
+
 import asyncio
+
+from typing import Any
 
 import streamlit as st
 
+from protocols.asynchronous import LocationSite, ServiceDedicatedInternet, CoreProposedChange
 from service_catalog.infrahub import (
     create_and_save,
     create_branch,
@@ -17,12 +22,9 @@ st.write(
 )
 
 
-def get_locations_options():
-    site_list = asyncio.run(
-        filter_nodes(
-            kind="LocationSite",
-            filters={},
-        )
+def get_locations_options() -> list[str]:
+    site_list: list[LocationSite] = asyncio.run(
+        filter_nodes(kind=LocationSite)
     )
 
     return [site.shortname.value for site in site_list]
@@ -34,16 +36,16 @@ with st.form("new_dedicated_internet_form"):
     account_reference = st.text_input("Account Reference")
 
     # Location
-    location_options: list = get_locations_options()
+    location_options: list[str] = get_locations_options()
     location = st.selectbox(
         "Location",
         location_options,
     )
 
     # Bandwidth
-    bandwidth_options: list = asyncio.run(
+    bandwidth_options: list[str] = asyncio.run(
         get_dropdown_options(
-            kind="ServiceDedicatedInternet",
+            kind=ServiceDedicatedInternet,
             attribute_name="bandwidth",
         )
     )
@@ -53,9 +55,9 @@ with st.form("new_dedicated_internet_form"):
     )
 
     # IP package
-    ip_package_options: list = asyncio.run(
+    ip_package_options: list[str] = asyncio.run(
         get_dropdown_options(
-            kind="ServiceDedicatedInternet",
+            kind=ServiceDedicatedInternet,
             attribute_name="ip_package",
         )
     )
@@ -75,7 +77,7 @@ if submitted:
         asyncio.run(create_branch(branch_name))
 
         st.write("Creating service object...")
-        service: dict = {
+        service: dict[str, Any] = {
             "service_identifier": service_identifier,
             "account_reference": account_reference,
             "status": "draft",
@@ -84,16 +86,16 @@ if submitted:
             "member_of_groups": ["automated_dedicated_internet"],
             "location": [location],
         }
-        service_obj = asyncio.run(
+        service_obj: ServiceDedicatedInternet = asyncio.run(
             create_and_save(
-                kind="ServiceDedicatedInternet",
+                kind=ServiceDedicatedInternet,
                 data=service,
                 branch=branch_name,
             )
         )
 
         st.write("Opening proposed change request...")
-        proposed_change: dict = {
+        proposed_change: dict[str, Any] = {
             "name": f"Implement service {service_identifier.lower()}",
             "source_branch": branch_name,
             "description": "This request is coming from service catalog form!",
@@ -101,9 +103,9 @@ if submitted:
             "tags": ["service_request"],
         }
 
-        proposed_change_obj = asyncio.run(
+        proposed_change_obj: CoreProposedChange = asyncio.run(
             create_and_save(
-                kind="CoreProposedChange",
+                kind=CoreProposedChange,
                 data=proposed_change,
             )
         )
