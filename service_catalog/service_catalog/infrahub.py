@@ -1,9 +1,12 @@
+from __future__ import annotations
+
 import os
 from functools import wraps
-from typing import Any, Callable, Coroutine
+from typing import Any, Callable, Coroutine, List
 
 import streamlit as st
 from infrahub_sdk import Config, InfrahubClient, InfrahubNode
+from infrahub_sdk.protocols import CoreNode
 from infrahub_sdk.branch import BranchData
 
 
@@ -49,8 +52,8 @@ async def create_branch(client: InfrahubClient, branch_name: str) -> BranchData:
 
 @with_client
 async def create_and_save(
-    client: InfrahubClient, kind: str, data: dict, branch: str = "main"
-) -> InfrahubNode:
+    client: InfrahubClient, kind: CoreNode, data: dict, branch: str = "main"
+) -> CoreNode:
     infrahub_node = await client.create(
         kind=kind,
         branch=branch,
@@ -59,15 +62,14 @@ async def create_and_save(
     await infrahub_node.save(allow_upsert=True)
     return infrahub_node
 
-
 @with_client
 async def filter_nodes(
     client: InfrahubClient,
-    kind: str,
+    kind: CoreNode,
     filters: dict = {},
     include: list[str] = None,
     branch: str = "main",
-) -> list[InfrahubNode]:
+) -> list[CoreNode]:
     return await client.filters(
         kind=kind,
         branch=branch,
@@ -80,7 +82,7 @@ async def filter_nodes(
 
 @with_client
 async def get_dropdown_options(
-    client: InfrahubClient, kind: str, attribute_name: str, branch: str = "main"
+    client: InfrahubClient, kind: CoreNode, attribute_name: str, branch: str = "main"
 ) -> list[str]:
     # Get schema for this kind
     schema = await client.schema.get(kind=kind, branch=branch)

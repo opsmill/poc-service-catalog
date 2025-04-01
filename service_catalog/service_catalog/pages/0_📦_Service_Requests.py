@@ -1,9 +1,13 @@
+from __future__ import annotations
+
 import asyncio
 
 import pandas as pd
 import streamlit as st
 
+from protocols.asynchronous import ServiceDedicatedInternet
 from service_catalog.infrahub import filter_nodes
+
 
 st.set_page_config(page_title="Service Requests", page_icon="📦")
 
@@ -13,30 +17,30 @@ st.write(
 )
 
 
-def render_asset_table(data: dict) -> None:
-    if data:
+def render_asset_table(service: ServiceDedicatedInternet) -> None:
+    if service:
         dedicated_interfaces: list = []
 
         if (
-            data.dedicated_interfaces.initialized
-            and len(data.dedicated_interfaces.peers) > 0
+            service.dedicated_interfaces.initialized
+            and len(service.dedicated_interfaces.peers) > 0
         ):
-            for interface in data.dedicated_interfaces.peers:
+            for interface in service.dedicated_interfaces.peers:
                 dedicated_interfaces.append(
                     f"{interface.peer.device.hfid[0]}.{interface.peer.name.value}"
                 )
         df = pd.DataFrame(
             {
                 "vlan_id": [
-                    data.vlan.peer.vlan_id.value if data.vlan.initialized else None
+                    service.vlan.peer.vlan_id.value if service.vlan.initialized else None
                 ],
                 "gateway_ip_address": [
-                    data.gateway_ip_address.peer.display_label
-                    if data.gateway_ip_address.initialized
+                    service.gateway_ip_address.peer.display_label
+                    if service.gateway_ip_address.initialized
                     else None
                 ],
                 "prefix": [
-                    data.prefix.peer.display_label if data.prefix.initialized else None
+                    service.prefix.peer.display_label if service.prefix.initialized else None
                 ],
                 "dedicated_interfaces": [dedicated_interfaces],
             }
@@ -57,19 +61,19 @@ def render_asset_table(data: dict) -> None:
         )
 
 
-def render_details_table(data: dict) -> None:
-    if data:
+def render_details_table(service: ServiceDedicatedInternet) -> None:
+    if service:
         st.dataframe(
             pd.DataFrame(
                 {
-                    "service_id": [data.service_identifier.value],
+                    "service_id": [service.service_identifier.value],
                     "account_ref": [
-                        data.account_reference.value,
+                        service.account_reference.value,
                     ],
-                    "status": [data.status.value],
-                    "location": [data.location.peer.display_label],
-                    "bandwidth": [data.bandwidth.value],
-                    "ip_package": [data.ip_package.value],
+                    "status": [service.status.value],
+                    "location": [service.location.peer.display_label],
+                    "bandwidth": [service.bandwidth.value],
+                    "ip_package": [service.ip_package.value],
                 }
             ),
             column_config={
@@ -85,9 +89,9 @@ def render_details_table(data: dict) -> None:
 
 
 # Get the data
-services = asyncio.run(
+services: list[ServiceDedicatedInternet] = asyncio.run(
     filter_nodes(
-        kind="ServiceDedicatedInternet",  # TODO: So far we only manage this kind
+        kind=ServiceDedicatedInternet,  # TODO: So far we only manage this kind
         include=["prefix", "interfaces"],
     )
 )

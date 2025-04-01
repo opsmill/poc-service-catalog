@@ -2,6 +2,22 @@ import logging
 
 from infrahub_sdk import InfrahubClient
 
+from protocols.asynchronous import (
+    BuiltinTag,
+    DcimDevice,
+    DcimDeviceType,
+    CoreStandardGroup,
+    OrganizationManufacturer,
+    LocationCountry,
+    LocationMetro,
+    LocationSite,
+    IpamL2Domain,
+    IpamPrefix,
+    CoreNumberPool,
+    CoreIPAddressPool,
+    CoreIPPrefixPool,
+)
+
 DEVICE_TYPES = ["Generic router", "Generic switch"]
 PREFIXES = ["172.16.1.0/24", "203.0.113.0/24"]
 
@@ -186,7 +202,7 @@ LOCATIONS = [
 
 async def create_org(client: InfrahubClient, log: logging.Logger, branch: str) -> None:
     manufacturer_obj = await client.create(
-        kind="OrganizationManufacturer",
+        kind=OrganizationManufacturer,
         name="Generic Manufacturer",
     )
 
@@ -195,19 +211,19 @@ async def create_org(client: InfrahubClient, log: logging.Logger, branch: str) -
     for type_name in DEVICE_TYPES:
         # here we +1 to not have switch 0
         device_type_obj = await client.create(
-            kind="DcimDeviceType", name=type_name, manufacturer=manufacturer_obj
+            kind=DcimDeviceType, name=type_name, manufacturer=manufacturer_obj
         )
 
         await device_type_obj.save(allow_upsert=True)
 
     group_obj = await client.create(
-        kind="CoreStandardGroup",
+        kind=CoreStandardGroup,
         name="automated_dedicated_internet",
     )
     await group_obj.save(allow_upsert=True)
 
     tag_obj = await client.create(
-        kind="BuiltinTag",
+        kind=BuiltinTag,
         name="service_request",
     )
     await tag_obj.save(allow_upsert=True)
@@ -219,7 +235,7 @@ async def create_location(
     for country in LOCATIONS:
         # Create country
         country_obj = await client.create(
-            kind="LocationCountry",
+            kind=LocationCountry,
             name=country["name"],
             shortname=country["shortname"],
         )
@@ -228,7 +244,7 @@ async def create_location(
         for metro in country["metros"]:
             # Create metro
             metro_obj = await client.create(
-                kind="LocationMetro",
+                kind=LocationMetro,
                 name=metro["name"],
                 shortname=metro["shortname"],
                 parent=country_obj,
@@ -237,7 +253,7 @@ async def create_location(
 
             for site in metro["sites"]:
                 site_obj = await client.create(
-                    kind="LocationSite",
+                    kind=LocationSite,
                     name=site["name"],
                     shortname=site["shortname"],
                     parent=metro_obj,
@@ -250,14 +266,14 @@ async def create_prefixes(
 ) -> None:
     # Create l2 domain
     l2_domain = await client.create(
-        kind="IpamL2Domain",
+        kind=IpamL2Domain,
         name="default",
     )
     await l2_domain.save(allow_upsert=True)
 
     # Create public prefix
     public_prefix = await client.create(
-        kind="IpamPrefix",
+        kind=IpamPrefix,
         status="active",
         prefix="203.0.113.0/24",
         member_type="prefix",
@@ -267,7 +283,7 @@ async def create_prefixes(
 
     # Create management prefix
     management_prefix = await client.create(
-        kind="IpamPrefix",
+        kind=IpamPrefix,
         status="active",
         prefix="172.16.1.0/24",
         member_type="address",
@@ -277,7 +293,7 @@ async def create_prefixes(
 
     # Create management ip pool
     management_pool = await client.create(
-        kind="CoreIPAddressPool",
+        kind=CoreIPAddressPool,
         name="Management IP pool",
         default_prefix_type="IpamIPPrefix",
         default_prefix_length=24,
@@ -289,7 +305,7 @@ async def create_prefixes(
     await management_pool.save(allow_upsert=True)
 
     customer_prefix_pool = await client.create(
-        kind="CoreIPPrefixPool",
+        kind=CoreIPPrefixPool,
         name="Customer prefixes pool",
         default_prefix_type="IpamPrefix",
         default_prefix_length=29,
@@ -300,7 +316,7 @@ async def create_prefixes(
     await customer_prefix_pool.save(allow_upsert=True)
 
     customer_vlan_pool = await client.create(
-        kind="CoreNumberPool",
+        kind=CoreNumberPool,
         name="Customer vlan pool",
         node="IpamVLAN",
         node_attribute="vlan_id",
@@ -311,7 +327,7 @@ async def create_prefixes(
 
 
 async def create_interfaces(
-    client: InfrahubClient, device_obj, interface_list: list
+    client: InfrahubClient, device_obj: DcimDevice, interface_list: list
 ) -> None:
     # Prepare the batch object for interfaces
     interface_batch = await client.create_batch()
@@ -357,16 +373,16 @@ async def create_devices(
     client: InfrahubClient, log: logging.Logger, branch: str
 ) -> None:
     # Query related info
-    site_list = await client.all("LocationSite")
+    site_list = await client.all(LocationSite)
     management_pool = await client.get(
-        name__value="Management IP pool", kind="CoreIPAddressPool"
+        name__value="Management IP pool", kind=CoreIPAddressPool
     )
 
     for site in site_list:
         for i in range(1, 3):
             # Create router object
             router_obj = await client.create(
-                kind="DcimDevice",
+                kind=DcimDevice,
                 name=f"rb0{str(i)}-{site.shortname.value}",
                 description="Border router.",
                 status="active",
@@ -384,7 +400,7 @@ async def create_devices(
 
             # Create switch object
             switch_obj = await client.create(
-                kind="DcimDevice",
+                kind=DcimDevice,
                 name=f"sw0{str(i)}-{site.shortname.value}",
                 description="Core switch.",
                 status="active",
