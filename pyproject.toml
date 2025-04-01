@@ -1,0 +1,17 @@
+[tool.poetry]
+name = "poc-service-catalog"
+version = "0.1.0"
+description = ""
+authors = ["OpsMill <info@opsmill.com>"]
+readme = "README.md"
+package-mode = false
+
+[tool.poetry.dependencies]
+python = "^3.10, <3.14"
+infrahub-sdk = {extras = ["all"], version = "^1.9.2"}
+streamlit = "^1.44.0"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
