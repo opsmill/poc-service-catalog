@@ -3,7 +3,8 @@ from functools import wraps
 from typing import Any, Callable, Coroutine
 
 import streamlit as st
-from infrahub_sdk import Config, InfrahubClient, InfrahubNode
+from infrahub_sdk import Config, InfrahubClientSync
+from infrahub_sdk.node import InfrahubNodeSync
 from infrahub_sdk.branch import BranchData
 
 
@@ -25,50 +26,50 @@ def with_client(
 ) -> Callable[..., Coroutine[Any, Any, Any]]:
     @wraps(func)
     async def wrapper(*args, **kwargs):
-        client: InfrahubClient = get_client()  # Initialize the client
+        client: InfrahubClientSync = get_client()  # Initialize the client
         return await func(client, *args, **kwargs)
 
     return wrapper
 
 
 @st.cache_resource
-def get_client(branch: str = "main") -> InfrahubClient:
+def get_client(branch: str = "main") -> InfrahubClientSync:
     address: str = get_instance_address()
-    return InfrahubClient(address=address, config=Config(default_branch=branch))
+    return InfrahubClientSync(address=address, config=Config(default_branch=branch))
 
 
 @with_client
-async def get_all_branches(client: InfrahubClient) -> dict[str, BranchData]:
-    return await client.branch.all()
+def get_all_branches(client: InfrahubClientSync) -> dict[str, BranchData]:
+    return client.branch.all()
 
 
 @with_client
-async def create_branch(client: InfrahubClient, branch_name: str) -> BranchData:
-    return await client.branch.create(branch_name=branch_name, sync_with_git=False)
+def create_branch(client: InfrahubClientSync, branch_name: str) -> BranchData:
+    return client.branch.create(branch_name=branch_name, sync_with_git=False)
 
 
 @with_client
-async def create_and_save(
-    client: InfrahubClient, kind: str, data: dict, branch: str = "main"
-) -> InfrahubNode:
-    infrahub_node = await client.create(
+def create_and_save(
+    client: InfrahubClientSync, kind: str, data: dict, branch: str = "main"
+) -> InfrahubNodeSync:
+    infrahub_node = client.create(
         kind=kind,
         branch=branch,
         **data,
     )
-    await infrahub_node.save(allow_upsert=True)
+    infrahub_node.save(allow_upsert=True)
     return infrahub_node
 
 
 @with_client
 async def filter_nodes(
-    client: InfrahubClient,
+    client: InfrahubClientSync,
     kind: str,
     filters: dict = {},
     include: list[str] = None,
     branch: str = "main",
-) -> list[InfrahubNode]:
-    return await client.filters(
+) -> list[InfrahubNodeSync]:
+    return client.filters(
         kind=kind,
         branch=branch,
         include=include,
@@ -80,10 +81,10 @@ async def filter_nodes(
 
 @with_client
 async def get_dropdown_options(
-    client: InfrahubClient, kind: str, attribute_name: str, branch: str = "main"
+    client: InfrahubClientSync, kind: str, attribute_name: str, branch: str = "main"
 ) -> list[str]:
     # Get schema for this kind
-    schema = await client.schema.get(kind=kind, branch=branch)
+    schema = client.schema.get(kind=kind, branch=branch)
 
     # Find desired attribute
     matched_attribute = next(

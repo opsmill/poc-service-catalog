@@ -12,7 +12,6 @@ st.write(
     "You will find on this page all services requests opened. For the one delivered you'll also find allocated assets."
 )
 
-
 def render_asset_table(data: dict) -> None:
     if data:
         dedicated_interfaces: list = []
@@ -85,12 +84,10 @@ def render_details_table(data: dict) -> None:
 
 
 # Get the data
-services = asyncio.run(
-    filter_nodes(
+services = filter_nodes(
         kind="ServiceDedicatedInternet",  # TODO: So far we only manage this kind
         include=["prefix", "interfaces"],
     )
-)
 
 if len(services) == 0:
     st.warning("There is currently no service ...")

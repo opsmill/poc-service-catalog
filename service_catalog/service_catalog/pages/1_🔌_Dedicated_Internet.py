@@ -1,4 +1,3 @@
-import asyncio
 
 import streamlit as st
 
@@ -18,12 +17,10 @@ st.write(
 
 
 def get_locations_options():
-    site_list = asyncio.run(
-        filter_nodes(
+    site_list = filter_nodes(
             kind="LocationSite",
             filters={},
         )
-    )
 
     return [site.shortname.value for site in site_list]
 
@@ -41,24 +38,21 @@ with st.form("new_dedicated_internet_form"):
     )
 
     # Bandwidth
-    bandwidth_options: list = asyncio.run(
-        get_dropdown_options(
+    bandwidth_options: list = get_dropdown_options(
             kind="ServiceDedicatedInternet",
             attribute_name="bandwidth",
         )
-    )
     bandwidth = st.selectbox(
         "Bandwidth",
         options=bandwidth_options,
     )
 
     # IP package
-    ip_package_options: list = asyncio.run(
-        get_dropdown_options(
+    ip_package_options: list = get_dropdown_options(
             kind="ServiceDedicatedInternet",
             attribute_name="ip_package",
         )
-    )
+
     ip_package = st.select_slider(
         "IP Package",
         options=ip_package_options,
@@ -72,7 +66,7 @@ if submitted:
         # TODO: Implement some validation in the inputs
         st.write("Creating branch...")
         branch_name: str = f"implement_{service_identifier.lower()}"
-        asyncio.run(create_branch(branch_name))
+        create_branch(branch_name)
 
         st.write("Creating service object...")
         service: dict = {
@@ -84,13 +78,12 @@ if submitted:
             "member_of_groups": ["automated_dedicated_internet"],
             "location": [location],
         }
-        service_obj = asyncio.run(
-            create_and_save(
+        service_obj = create_and_save(
                 kind="ServiceDedicatedInternet",
                 data=service,
                 branch=branch_name,
             )
-        )
+
 
         st.write("Opening proposed change request...")
         proposed_change: dict = {
@@ -101,11 +94,9 @@ if submitted:
             "tags": ["service_request"],
         }
 
-        proposed_change_obj = asyncio.run(
-            create_and_save(
+        proposed_change_obj = create_and_save(
                 kind="CoreProposedChange",
                 data=proposed_change,
             )
-        )
 
         status.update(label="Service request opened!", state="complete", expanded=False)
