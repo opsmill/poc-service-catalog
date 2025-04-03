@@ -11,9 +11,10 @@ packages = [
 
 [tool.poetry.dependencies]
 python = "^3.10, <3.14"
-infrahub-sdk = {git = "https://github.com/opsmill/infrahub-sdk-python.git", rev = "stable", extras = ["all"]}
+infrahub-sdk = {git = "https://github.com/opsmill/infrahub-sdk-python.git", rev = "dga-20250330-object-cmd", extras = ["all"]}
 streamlit = "^1.44.0"
 watchdog = "^6.0.0"
+fast-depends = "^2.4.12"
 
 [build-system]
 requires = ["poetry-core"]

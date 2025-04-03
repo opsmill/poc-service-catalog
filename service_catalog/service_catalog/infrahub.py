@@ -1,6 +1,8 @@
 import os
 from functools import wraps
 from typing import Any, Callable, Coroutine
+from fast_depends import inject, Depends
+from typing import Annotated
 
 import streamlit as st
 from infrahub_sdk import Config, InfrahubClientSync
@@ -20,37 +22,25 @@ def get_instance_address() -> str:
     else:
         return st.session_state.infrahub_address
 
-
-def with_client(
-    func: Callable[..., Coroutine[Any, Any, Any]],
-) -> Callable[..., Coroutine[Any, Any, Any]]:
-    @wraps(func)
-    def wrapper(*args, **kwargs):
-        client: InfrahubClientSync = get_client()  # Initialize the client
-        return func(client, *args, **kwargs)
-
-    return wrapper
-
-
 @st.cache_resource
 def get_client(branch: str = "main") -> InfrahubClientSync:
     address: str = get_instance_address()
     return InfrahubClientSync(address=address, config=Config(default_branch=branch))
 
 
-@with_client
-def get_all_branches(client: InfrahubClientSync) -> dict[str, BranchData]:
+@inject
+def get_all_branches(client: InfrahubClientSync = Depends(get_client)) -> dict[str, BranchData]:
     return client.branch.all()
 
 
-@with_client
-def create_branch(client: InfrahubClientSync, branch_name: str) -> BranchData:
+@inject
+def create_branch(branch_name: str, client: InfrahubClientSync = Depends(get_client)) -> BranchData:
     return client.branch.create(branch_name=branch_name, sync_with_git=False)
 
 
-@with_client
+@inject
 def create_and_save(
-    client: InfrahubClientSync, kind: str, data: dict, branch: str = "main"
+    kind: str, data: dict, branch: str = "main", client: InfrahubClientSync = Depends(get_client)
 ) -> InfrahubNodeSync:
     infrahub_node = client.create(
         kind=kind,
@@ -61,28 +51,35 @@ def create_and_save(
     return infrahub_node
 
 
-@with_client
+@inject
 def filter_nodes(
-    client: InfrahubClientSync,
     kind: str,
     filters: dict = {},
     include: list[str] = None,
     branch: str = "main",
+    client: InfrahubClientSync = Depends(get_client),
 ) -> list[InfrahubNodeSync]:
+    """
+    Filter nodes by kind, branch, include and filters.
+    NOTE Not sure if we really need this function.
+    """
     return client.filters(
         kind=kind,
         branch=branch,
         include=include,
         prefetch_relationships=True,
-        populate_store=True,
         **filters,
     )
 
 
-@with_client
+@inject
 def get_dropdown_options(
-    client: InfrahubClientSync, kind: str, attribute_name: str, branch: str = "main"
+    kind: str, attribute_name: str, branch: str = "main",
+    client: InfrahubClientSync = Depends(get_client),
 ) -> list[str]:
+    """
+    Get dropdown options for a given attribute.
+    """
     # Get schema for this kind
     schema = client.schema.get(kind=kind, branch=branch)
 
@@ -91,9 +88,7 @@ def get_dropdown_options(
         (att for att in schema.attributes if att.name == attribute_name), None
     )
 
-    # Raise exception if we can't find it
     if matched_attribute is None:
-        Exception(f"Can't find attribute `{attribute_name}` for kind `{kind}`")
+        raise Exception(f"Can't find attribute `{attribute_name}` for kind `{kind}`")
     else:
-        # Otherwise return choices
         return [choice["name"] for choice in matched_attribute.choices]
