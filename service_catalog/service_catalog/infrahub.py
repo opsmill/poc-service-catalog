@@ -25,9 +25,9 @@ def with_client(
     func: Callable[..., Coroutine[Any, Any, Any]],
 ) -> Callable[..., Coroutine[Any, Any, Any]]:
     @wraps(func)
-    async def wrapper(*args, **kwargs):
+    def wrapper(*args, **kwargs):
         client: InfrahubClientSync = get_client()  # Initialize the client
-        return await func(client, *args, **kwargs)
+        return func(client, *args, **kwargs)
 
     return wrapper
 
@@ -62,7 +62,7 @@ def create_and_save(
 
 
 @with_client
-async def filter_nodes(
+def filter_nodes(
     client: InfrahubClientSync,
     kind: str,
     filters: dict = {},
@@ -80,7 +80,7 @@ async def filter_nodes(
 
 
 @with_client
-async def get_dropdown_options(
+def get_dropdown_options(
     client: InfrahubClientSync, kind: str, attribute_name: str, branch: str = "main"
 ) -> list[str]:
     # Get schema for this kind

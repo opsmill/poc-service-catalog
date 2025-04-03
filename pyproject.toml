@@ -4,13 +4,16 @@ version = "0.1.0"
 description = ""
 authors = ["OpsMill <info@opsmill.com>"]
 readme = "README.md"
-package-mode = false
+
+packages = [
+    { include = "service_catalog", from = "service_catalog" },
+]
 
 [tool.poetry.dependencies]
 python = "^3.10, <3.14"
-infrahub-sdk = {extras = ["all"], version = "^1.9.2"}
+infrahub-sdk = {git = "https://github.com/opsmill/infrahub-sdk-python.git", rev = "dga-20250330-object-cmd", extras = ["all"]}
 streamlit = "^1.44.0"
-
+watchdog = "^6.0.0"
 
 [build-system]
 requires = ["poetry-core"]
