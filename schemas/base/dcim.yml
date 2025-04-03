@@ -295,6 +295,7 @@ nodes:
     description: A configurable network device for managing and directing data traffic, including routers, switches...
     icon: clarity:network-switch-solid
     namespace: Dcim
+    generate_template: true
     inherit_from:
       - CoreArtifactTarget
       - DcimGenericDevice
