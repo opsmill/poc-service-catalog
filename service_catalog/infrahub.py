@@ -80,6 +80,8 @@ def get_dropdown_options(
     """
     Get dropdown options for a given attribute.
     """
+
+    breakpoint()
     # Get schema for this kind
     schema = client.schema.get(kind=kind, branch=branch)
 

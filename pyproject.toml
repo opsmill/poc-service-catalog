@@ -6,7 +6,7 @@ authors = ["OpsMill <info@opsmill.com>"]
 readme = "README.md"
 
 packages = [
-    { include = "service_catalog", from = "service_catalog" },
+    { include = "service_catalog" },
 ]
 
 [tool.poetry.dependencies]
@@ -15,6 +15,17 @@ infrahub-sdk = {git = "https://github.com/opsmill/infrahub-sdk-python.git", rev 
 streamlit = "^1.44.0"
 watchdog = "^6.0.0"
 fast-depends = "^2.4.12"
+
+[tool.poetry.group.dev.dependencies]
+pytest-httpx = "^0.35.0"
+pytest-clarity = "^1.0.1"
+pytest-asyncio = "^0.26.0"
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
+testpaths = ["tests"]
+filterwarnings = []
+addopts = "-vs"
 
 [build-system]
 requires = ["poetry-core"]
