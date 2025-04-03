@@ -1,44 +1,35 @@
-import asyncio
+from __future__ import annotations
 
 import pandas as pd
 import streamlit as st
 
 from service_catalog.infrahub import filter_nodes
 from service_catalog.protocols import ServiceDedicatedInternet
+
 st.set_page_config(page_title="Service Requests", page_icon="📦")
 
 st.markdown("# Service Requests")
 st.write(
-    "You will find on this page all services requests opened. For the one delivered you'll also find allocated assets."
+    "You will find on this page all services requests opened. For the one delivered you'll also find allocated assets.",
 )
+
 
 def render_asset_table(data: ServiceDedicatedInternet) -> None:
     if data:
         dedicated_interfaces: list = []
 
-        if (
-            data.dedicated_interfaces.initialized
-            and len(data.dedicated_interfaces.peers) > 0
-        ):
+        if data.dedicated_interfaces.initialized and len(data.dedicated_interfaces.peers) > 0:
             for interface in data.dedicated_interfaces.peers:
-                dedicated_interfaces.append(
-                    f"{interface.peer.device.hfid[0]}.{interface.peer.name.value}"
-                )
+                dedicated_interfaces.append(f"{interface.peer.device.hfid[0]}.{interface.peer.name.value}")  # noqa: PERF401
         df = pd.DataFrame(
             {
-                "vlan_id": [
-                    data.vlan.peer.vlan_id.value if data.vlan.initialized else None
-                ],
+                "vlan_id": [data.vlan.peer.vlan_id.value if data.vlan.initialized else None],
                 "gateway_ip_address": [
-                    data.gateway_ip_address.peer.display_label
-                    if data.gateway_ip_address.initialized
-                    else None
+                    data.gateway_ip_address.peer.display_label if data.gateway_ip_address.initialized else None,
                 ],
-                "prefix": [
-                    data.prefix.peer.display_label if data.prefix.initialized else None
-                ],
+                "prefix": [data.prefix.peer.display_label if data.prefix.initialized else None],
                 "dedicated_interfaces": [dedicated_interfaces],
-            }
+            },
         )
         st.dataframe(
             df,
@@ -56,7 +47,7 @@ def render_asset_table(data: ServiceDedicatedInternet) -> None:
         )
 
 
-def render_details_table(data: dict) -> None:
+def render_details_table(data: ServiceDedicatedInternet) -> None:
     if data:
         st.dataframe(
             pd.DataFrame(
@@ -69,7 +60,7 @@ def render_details_table(data: dict) -> None:
                     "location": [data.location.peer.display_label],
                     "bandwidth": [data.bandwidth.value],
                     "ip_package": [data.ip_package.value],
-                }
+                },
             ),
             column_config={
                 "service_id": "Service Identifier",
@@ -85,9 +76,9 @@ def render_details_table(data: dict) -> None:
 
 # Get the data
 services: list[ServiceDedicatedInternet] = filter_nodes(
-        kind=ServiceDedicatedInternet,
-        include=["prefix", "interfaces"],
-    )
+    kind=ServiceDedicatedInternet,
+    include=["prefix", "interfaces"],
+)
 
 if len(services) == 0:
     st.warning("There is currently no service ...")

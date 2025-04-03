@@ -1,28 +1,27 @@
+from __future__ import annotations
 
 import streamlit as st
 
+from infrahub_sdk.protocols import CoreProposedChange
 from service_catalog.infrahub import (
     create_and_save,
     create_branch,
     filter_nodes,
     get_dropdown_options,
 )
-from service_catalog.protocols import ServiceDedicatedInternet
-from infrahub_sdk.protocols import CoreProposedChange
+from service_catalog.protocols import LocationSite, ServiceDedicatedInternet
 
 st.set_page_config(page_title="Dedicated Internet", page_icon="🔌")
 
 st.markdown("# Dedicated Internet")
-st.write(
-    "This form will allow you to request the implementation of a new dedicated internet service."
-)
+st.write("This form will allow you to request the implementation of a new dedicated internet service.")
 
 
-def get_locations_options():
-    site_list = filter_nodes(
-            kind="LocationSite",
-            filters={},
-        )
+def get_locations_options() -> list[str]:
+    site_list: list[LocationSite] = filter_nodes(
+        kind=LocationSite,
+        filters={},
+    )
 
     return [site.shortname.value for site in site_list]
 
@@ -41,9 +40,9 @@ with st.form("new_dedicated_internet_form"):
 
     # Bandwidth
     bandwidth_options: list = get_dropdown_options(
-            kind=ServiceDedicatedInternet,
-            attribute_name="bandwidth",
-        )
+        kind=ServiceDedicatedInternet,
+        attribute_name="bandwidth",
+    )
     bandwidth = st.selectbox(
         "Bandwidth",
         options=bandwidth_options,
@@ -51,9 +50,9 @@ with st.form("new_dedicated_internet_form"):
 
     # IP package
     ip_package_options: list = get_dropdown_options(
-            kind=ServiceDedicatedInternet,
-            attribute_name="ip_package",
-        )
+        kind=ServiceDedicatedInternet,
+        attribute_name="ip_package",
+    )
 
     ip_package = st.select_slider(
         "IP Package",
@@ -81,11 +80,10 @@ if submitted:
             "location": [location],
         }
         service_obj = create_and_save(
-                kind=ServiceDedicatedInternet,
-                data=service,
-                branch=branch_name,
-            )
-
+            kind=ServiceDedicatedInternet,
+            data=service,
+            branch=branch_name,
+        )
 
         st.write("Opening proposed change request...")
         proposed_change: dict = {
@@ -97,8 +95,8 @@ if submitted:
         }
 
         proposed_change_obj = create_and_save(
-                kind=CoreProposedChange,
-                data=proposed_change,
-            )
+            kind=CoreProposedChange,
+            data=proposed_change,
+        )
 
         status.update(label="Service request opened!", state="complete", expanded=False)

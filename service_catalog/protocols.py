@@ -4,39 +4,25 @@
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Optional
+from typing import TYPE_CHECKING
 
-from infrahub_sdk.protocols import CoreNode, BuiltinIPAddress, BuiltinIPAddressSync, BuiltinIPNamespace, BuiltinIPNamespaceSync, BuiltinIPPrefix, BuiltinIPPrefixSync, BuiltinTag, BuiltinTagSync, CoreAccount, CoreAccountGroup, CoreAccountGroupSync, CoreAccountRole, CoreAccountRoleSync, CoreAccountSync, CoreArtifact, CoreArtifactCheck, CoreArtifactCheckSync, CoreArtifactDefinition, CoreArtifactDefinitionSync, CoreArtifactSync, CoreArtifactTarget, CoreArtifactTargetSync, CoreArtifactThread, CoreArtifactThreadSync, CoreArtifactValidator, CoreArtifactValidatorSync, CoreBasePermission, CoreBasePermissionSync, CoreChangeComment, CoreChangeCommentSync, CoreChangeThread, CoreChangeThreadSync, CoreCheck, CoreCheckDefinition, CoreCheckDefinitionSync, CoreCheckSync, CoreComment, CoreCommentSync, CoreCredential, CoreCredentialSync, CoreCustomWebhook, CoreCustomWebhookSync, CoreDataCheck, CoreDataCheckSync, CoreDataValidator, CoreDataValidatorSync, CoreFileCheck, CoreFileCheckSync, CoreFileThread, CoreFileThreadSync, CoreGeneratorCheck, CoreGeneratorCheckSync, CoreGeneratorDefinition, CoreGeneratorDefinitionSync, CoreGeneratorGroup, CoreGeneratorGroupSync, CoreGeneratorInstance, CoreGeneratorInstanceSync, CoreGeneratorValidator, CoreGeneratorValidatorSync, CoreGenericAccount, CoreGenericAccountSync, CoreGenericRepository, CoreGenericRepositorySync, CoreGlobalPermission, CoreGlobalPermissionSync, CoreGraphQLQuery, CoreGraphQLQueryGroup, CoreGraphQLQueryGroupSync, CoreGraphQLQuerySync, CoreGroup, CoreGroupSync, CoreIPAddressPool, CoreIPAddressPoolSync, CoreIPPrefixPool, CoreIPPrefixPoolSync, CoreMenu, CoreMenuItem, CoreMenuItemSync, CoreMenuSync, CoreNodeSync, CoreNumberPool, CoreNumberPoolSync, CoreObjectPermission, CoreObjectPermissionSync, CoreObjectTemplate, CoreObjectTemplateSync, CoreObjectThread, CoreObjectThreadSync, CorePasswordCredential, CorePasswordCredentialSync, CoreProfile, CoreProfileSync, CoreProposedChange, CoreProposedChangeSync, CoreReadOnlyRepository, CoreReadOnlyRepositorySync, CoreRepository, CoreRepositorySync, CoreRepositoryValidator, CoreRepositoryValidatorSync, CoreResourcePool, CoreResourcePoolSync, CoreSchemaCheck, CoreSchemaCheckSync, CoreSchemaValidator, CoreSchemaValidatorSync, CoreStandardCheck, CoreStandardCheckSync, CoreStandardGroup, CoreStandardGroupSync, CoreStandardWebhook, CoreStandardWebhookSync, CoreTaskTarget, CoreTaskTargetSync, CoreThread, CoreThreadComment, CoreThreadCommentSync, CoreThreadSync, CoreTransformJinja2, CoreTransformJinja2Sync, CoreTransformPython, CoreTransformPythonSync, CoreTransformation, CoreTransformationSync, CoreUserValidator, CoreUserValidatorSync, CoreValidator, CoreValidatorSync, CoreWebhook, CoreWebhookSync, InternalAccountToken, InternalAccountTokenSync, InternalRefreshToken, InternalRefreshTokenSync, IpamNamespace, IpamNamespaceSync, LineageOwner, LineageOwnerSync, LineageSource, LineageSourceSync
+from infrahub_sdk.protocols import (
+    BuiltinIPAddress,
+    BuiltinIPPrefix,
+    CoreArtifactTarget,
+    CoreNode,
+)
 
 if TYPE_CHECKING:
     from infrahub_sdk.node import RelatedNodeSync, RelationshipManagerSync
     from infrahub_sdk.protocols_base import (
-        AnyAttribute,
-        AnyAttributeOptional,
-        String,
-        StringOptional,
-        Integer,
-        IntegerOptional,
         Boolean,
-        BooleanOptional,
-        DateTime,
-        DateTimeOptional,
         Dropdown,
         DropdownOptional,
-        HashedPassword,
-        HashedPasswordOptional,
-        MacAddress,
-        MacAddressOptional,
-        IPHost,
-        IPHostOptional,
-        IPNetwork,
-        IPNetworkOptional,
-        JSONAttribute,
-        JSONAttributeOptional,
-        ListAttribute,
-        ListAttributeOptional,
-        URL,
-        URLOptional,
+        Integer,
+        IntegerOptional,
+        String,
+        StringOptional,
     )
 
 
