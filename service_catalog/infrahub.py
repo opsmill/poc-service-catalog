@@ -8,6 +8,7 @@ import streamlit as st
 from infrahub_sdk import Config, InfrahubClientSync
 from infrahub_sdk.node import InfrahubNodeSync
 from infrahub_sdk.branch import BranchData
+from infrahub_sdk.client import SchemaTypeSync  
 
 
 def get_instance_address() -> str:
@@ -40,8 +41,8 @@ def create_branch(branch_name: str, client: InfrahubClientSync = Depends(get_cli
 
 @inject
 def create_and_save(
-    kind: str, data: dict, branch: str = "main", client: InfrahubClientSync = Depends(get_client)
-) -> InfrahubNodeSync:
+    kind: type[SchemaTypeSync], data: dict, branch: str = "main", client: InfrahubClientSync = Depends(get_client)
+) -> SchemaTypeSync:
     infrahub_node = client.create(
         kind=kind,
         branch=branch,
@@ -53,12 +54,12 @@ def create_and_save(
 
 @inject
 def filter_nodes(
-    kind: str,
+    kind: type[SchemaTypeSync],
     filters: dict = {},
     include: list[str] = None,
     branch: str = "main",
     client: InfrahubClientSync = Depends(get_client),
-) -> list[InfrahubNodeSync]:
+) -> list[SchemaTypeSync]:
     """
     Filter nodes by kind, branch, include and filters.
     NOTE Not sure if we really need this function.
@@ -74,14 +75,15 @@ def filter_nodes(
 
 @inject
 def get_dropdown_options(
-    kind: str, attribute_name: str, branch: str = "main",
+    kind: str | type[SchemaTypeSync],
+    attribute_name: str,
+    branch: str = "main",
     client: InfrahubClientSync = Depends(get_client),
 ) -> list[str]:
     """
     Get dropdown options for a given attribute.
     """
 
-    breakpoint()
     # Get schema for this kind
     schema = client.schema.get(kind=kind, branch=branch)
 

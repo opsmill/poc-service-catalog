@@ -4,7 +4,7 @@ import pandas as pd
 import streamlit as st
 
 from service_catalog.infrahub import filter_nodes
-
+from service_catalog.protocols import ServiceDedicatedInternet
 st.set_page_config(page_title="Service Requests", page_icon="📦")
 
 st.markdown("# Service Requests")
@@ -12,7 +12,7 @@ st.write(
     "You will find on this page all services requests opened. For the one delivered you'll also find allocated assets."
 )
 
-def render_asset_table(data: dict) -> None:
+def render_asset_table(data: ServiceDedicatedInternet) -> None:
     if data:
         dedicated_interfaces: list = []
 
@@ -84,8 +84,8 @@ def render_details_table(data: dict) -> None:
 
 
 # Get the data
-services = filter_nodes(
-        kind="ServiceDedicatedInternet",  # TODO: So far we only manage this kind
+services: list[ServiceDedicatedInternet] = filter_nodes(
+        kind=ServiceDedicatedInternet,
         include=["prefix", "interfaces"],
     )
 

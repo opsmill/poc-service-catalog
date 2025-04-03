@@ -7,6 +7,8 @@ from service_catalog.infrahub import (
     filter_nodes,
     get_dropdown_options,
 )
+from service_catalog.protocols import ServiceDedicatedInternet
+from infrahub_sdk.protocols import CoreProposedChange
 
 st.set_page_config(page_title="Dedicated Internet", page_icon="🔌")
 
@@ -39,7 +41,7 @@ with st.form("new_dedicated_internet_form"):
 
     # Bandwidth
     bandwidth_options: list = get_dropdown_options(
-            kind="ServiceDedicatedInternet",
+            kind=ServiceDedicatedInternet,
             attribute_name="bandwidth",
         )
     bandwidth = st.selectbox(
@@ -49,7 +51,7 @@ with st.form("new_dedicated_internet_form"):
 
     # IP package
     ip_package_options: list = get_dropdown_options(
-            kind="ServiceDedicatedInternet",
+            kind=ServiceDedicatedInternet,
             attribute_name="ip_package",
         )
 
@@ -79,7 +81,7 @@ if submitted:
             "location": [location],
         }
         service_obj = create_and_save(
-                kind="ServiceDedicatedInternet",
+                kind=ServiceDedicatedInternet,
                 data=service,
                 branch=branch_name,
             )
@@ -95,7 +97,7 @@ if submitted:
         }
 
         proposed_change_obj = create_and_save(
-                kind="CoreProposedChange",
+                kind=CoreProposedChange,
                 data=proposed_change,
             )
 
