@@ -1,28 +1,26 @@
-import asyncio
+from __future__ import annotations
 
 import streamlit as st
 
+from infrahub_sdk.protocols import CoreProposedChange
 from service_catalog.infrahub import (
     create_and_save,
     create_branch,
     filter_nodes,
     get_dropdown_options,
 )
+from service_catalog.protocols import LocationSite, ServiceDedicatedInternet
 
 st.set_page_config(page_title="Dedicated Internet", page_icon="🔌")
 
 st.markdown("# Dedicated Internet")
-st.write(
-    "This form will allow you to request the implementation of a new dedicated internet service."
-)
+st.write("This form will allow you to request the implementation of a new dedicated internet service.")
 
 
-def get_locations_options():
-    site_list = asyncio.run(
-        filter_nodes(
-            kind="LocationSite",
-            filters={},
-        )
+def get_locations_options() -> list[str]:
+    site_list: list[LocationSite] = filter_nodes(
+        kind=LocationSite,
+        filters={},
     )
 
     return [site.shortname.value for site in site_list]
@@ -41,11 +39,9 @@ with st.form("new_dedicated_internet_form"):
     )
 
     # Bandwidth
-    bandwidth_options: list = asyncio.run(
-        get_dropdown_options(
-            kind="ServiceDedicatedInternet",
-            attribute_name="bandwidth",
-        )
+    bandwidth_options: list = get_dropdown_options(
+        kind=ServiceDedicatedInternet,
+        attribute_name="bandwidth",
     )
     bandwidth = st.selectbox(
         "Bandwidth",
@@ -53,12 +49,11 @@ with st.form("new_dedicated_internet_form"):
     )
 
     # IP package
-    ip_package_options: list = asyncio.run(
-        get_dropdown_options(
-            kind="ServiceDedicatedInternet",
-            attribute_name="ip_package",
-        )
+    ip_package_options: list = get_dropdown_options(
+        kind=ServiceDedicatedInternet,
+        attribute_name="ip_package",
     )
+
     ip_package = st.select_slider(
         "IP Package",
         options=ip_package_options,
@@ -72,7 +67,7 @@ if submitted:
         # TODO: Implement some validation in the inputs
         st.write("Creating branch...")
         branch_name: str = f"implement_{service_identifier.lower()}"
-        asyncio.run(create_branch(branch_name))
+        create_branch(branch_name)
 
         st.write("Creating service object...")
         service: dict = {
@@ -84,12 +79,10 @@ if submitted:
             "member_of_groups": ["automated_dedicated_internet"],
             "location": [location],
         }
-        service_obj = asyncio.run(
-            create_and_save(
-                kind="ServiceDedicatedInternet",
-                data=service,
-                branch=branch_name,
-            )
+        service_obj = create_and_save(
+            kind=ServiceDedicatedInternet,
+            data=service,
+            branch=branch_name,
         )
 
         st.write("Opening proposed change request...")
@@ -101,11 +94,9 @@ if submitted:
             "tags": ["service_request"],
         }
 
-        proposed_change_obj = asyncio.run(
-            create_and_save(
-                kind="CoreProposedChange",
-                data=proposed_change,
-            )
+        proposed_change_obj = create_and_save(
+            kind=CoreProposedChange,
+            data=proposed_change,
         )
 
         status.update(label="Service request opened!", state="complete", expanded=False)
