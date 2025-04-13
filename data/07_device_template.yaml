@@ -1,0 +1,109 @@
+---
+apiVersion: infrahub.app/v1
+kind: Object
+spec:
+  kind: TemplateDcimDevice
+  data:
+    - template_name: "Generic switch"
+      status: "active"
+      role: "tor"
+      device_type: "Generic switch"
+      interfaces:
+        kind: TemplateDcimInterfaceL2
+        data:
+          - template_name: "GenericSwitchEthernet4"
+            name: "Ethernet4"
+            speed: 1000
+            role: customer
+            enabled: false
+            status: free
+
+          - template_name: "GenericSwitchEthernet5"
+            name: "Ethernet5"
+            speed: 1000
+            role: customer
+            enabled: false
+            status: free
+
+          - template_name: "GenericSwitchEthernet6"
+            name: "Ethernet6"
+            speed: 1000
+            role: customer
+            enabled: false
+            status: free
+
+          - template_name: "GenericSwitchEthernet7"
+            name: "Ethernet7"
+            speed: 1000
+            role: customer
+            enabled: false
+            status: free
+
+          - template_name: "GenericSwitchEthernet8"
+            name: "Ethernet8"
+            speed: 1000
+            role: customer
+            enabled: false
+            status: free
+
+          - template_name: "GenericSwitchEthernet9"
+            name: "Ethernet9"
+            speed: 1000
+            role: customer
+            enabled: false
+            status: free
+  
+        # BLOCKED by https://github.com/opsmill/infrahub/issues/6287
+        # - kind: TemplateDcimInterfaceL2
+        #   data:
+        #     template_name: "GenericSwitchEthernet4"
+        #     name: "Ethernet4"
+        #     speed: 1000
+        #     role: customer
+        #     enabled: false
+        #     status: free
+
+        # - kind: TemplateDcimInterfaceL2
+        #   data:
+        #     template_name: "GenericSwitchEthernet5"
+        #     name: "Ethernet5"
+        #     speed: 1000
+        #     role: customer
+        #     enabled: false
+        #     status: free
+
+        # - kind: TemplateDcimInterfaceL2
+        #   data:
+        #     template_name: "GenericSwitchEthernet6"
+        #     name: "Ethernet6"
+        #     speed: 1000
+        #     role: customer
+        #     enabled: false
+        #     status: free
+
+        # - kind: TemplateDcimInterfaceL2
+        #   data:
+        #     template_name: "GenericSwitchEthernet7"
+        #     name: "Ethernet7"
+        #     speed: 1000
+        #     role: customer
+        #     enabled: false
+        #     status: free
+
+        # - kind: TemplateDcimInterfaceL2
+        #   data:
+        #     template_name: "GenericSwitchEthernet8"
+        #     name: "Ethernet8"
+        #     speed: 1000
+        #     role: customer
+        #     enabled: false
+        #     status: free
+
+        # - kind: TemplateDcimInterfaceL2
+        #   data:
+        #     template_name: "GenericSwitchEthernet9"
+        #     name: "Ethernet9"
+        #     speed: 1000
+        #     role: customer
+        #     enabled: false
+        #     status: free

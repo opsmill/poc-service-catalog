@@ -1,0 +1,22 @@
+---
+apiVersion: infrahub.app/v1
+kind: Object
+spec:
+  kind: DcimDevice
+  data:
+    - name: sw01-bru01
+      location: bru01
+      status: active
+      object_template: "Generic switch"
+    - name: sw02-bru01
+      location: bru01
+      status: active
+      object_template: "Generic switch"
+    - name: sw01-lyn01
+      location: lyn01
+      status: active
+      object_template: "Generic switch"
+    - name: sw02-lyn01
+      location: lyn01
+      status: active
+      object_template: "Generic switch"
