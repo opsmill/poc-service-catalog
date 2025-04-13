@@ -9,7 +9,7 @@ from service_catalog.infrahub import (
     filter_nodes,
     get_dropdown_options,
 )
-from service_catalog.protocols import LocationSite, ServiceDedicatedInternet
+from service_catalog.protocols_sync import LocationSite, ServiceDedicatedInternet
 
 st.set_page_config(page_title="Dedicated Internet", page_icon="🔌")
 
