@@ -6,6 +6,8 @@ from pytest_httpx import HTTPXMock
 
 from infrahub_sdk import InfrahubClientSync
 from infrahub_sdk.yaml import SchemaFile
+from infrahub_sdk.ctl.repository import get_repository_config
+from infrahub_sdk.schema.repository import InfrahubRepositoryConfig
 
 CURRENT_DIR = Path(__file__).parent
 
@@ -40,6 +42,9 @@ def schemas_data(schema_dir: Path) -> list[dict]:
 def client() -> InfrahubClientSync:
     return InfrahubClientSync(address="http://mock")
 
+@pytest.fixture(scope="session")
+def repository_config(root_dir: Path) -> InfrahubRepositoryConfig:
+    return get_repository_config(repo_config_file=root_dir / ".infrahub.yml")
 
 @pytest.fixture
 def mock_schema_query_01(fixtures_dir: Path, httpx_mock: HTTPXMock) -> HTTPXMock:

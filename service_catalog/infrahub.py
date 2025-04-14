@@ -7,10 +7,10 @@ import streamlit as st
 from fast_depends import Depends, inject
 
 from infrahub_sdk import Config, InfrahubClientSync
+from infrahub_sdk.client import SchemaTypeSync
 
 if TYPE_CHECKING:
     from infrahub_sdk.branch import BranchData
-    from infrahub_sdk.client import SchemaTypeSync
 
 
 def get_instance_address() -> str:
