@@ -52,7 +52,7 @@ spec:
             role: customer
             enabled: false
             status: free
-  
+
         # BLOCKED by https://github.com/opsmill/infrahub/issues/6287
         # - kind: TemplateDcimInterfaceL2
         #   data:

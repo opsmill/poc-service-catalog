@@ -1,11 +1,19 @@
+from __future__ import annotations
+
 import logging
 import random
 
 from infrahub_sdk.generator import InfrahubGenerator
 from infrahub_sdk.node import InfrahubNode
 from infrahub_sdk.protocols import CoreIPPrefixPool, CoreNumberPool
-
-from service_catalog.protocols_async import IpamVLAN, DcimDevice, DcimInterfaceL3, IpamIPAddress, ServiceDedicatedInternet, IpamPrefix
+from service_catalog.protocols_async import (
+    DcimDevice,
+    DcimInterfaceL3,
+    IpamIPAddress,
+    IpamPrefix,
+    IpamVLAN,
+    ServiceDedicatedInternet,
+)
 
 ACTIVE_STATUS = "active"
 SERVICE_VLAN_POOL: str = "Customer vlan pool"
