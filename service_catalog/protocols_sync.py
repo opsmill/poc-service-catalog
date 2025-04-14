@@ -4,39 +4,30 @@
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Optional
+from typing import TYPE_CHECKING
 
-from infrahub_sdk.protocols import CoreNodeSync, BuiltinIPAddress, BuiltinIPAddressSync, BuiltinIPNamespace, BuiltinIPNamespaceSync, BuiltinIPPrefix, BuiltinIPPrefixSync, BuiltinTag, BuiltinTagSync, CoreAccount, CoreAccountGroup, CoreAccountGroupSync, CoreAccountRole, CoreAccountRoleSync, CoreAccountSync, CoreArtifact, CoreArtifactCheck, CoreArtifactCheckSync, CoreArtifactDefinition, CoreArtifactDefinitionSync, CoreArtifactSync, CoreArtifactTarget, CoreArtifactTargetSync, CoreArtifactThread, CoreArtifactThreadSync, CoreArtifactValidator, CoreArtifactValidatorSync, CoreBasePermission, CoreBasePermissionSync, CoreChangeComment, CoreChangeCommentSync, CoreChangeThread, CoreChangeThreadSync, CoreCheck, CoreCheckDefinition, CoreCheckDefinitionSync, CoreCheckSync, CoreComment, CoreCommentSync, CoreCredential, CoreCredentialSync, CoreCustomWebhook, CoreCustomWebhookSync, CoreDataCheck, CoreDataCheckSync, CoreDataValidator, CoreDataValidatorSync, CoreFileCheck, CoreFileCheckSync, CoreFileThread, CoreFileThreadSync, CoreGeneratorCheck, CoreGeneratorCheckSync, CoreGeneratorDefinition, CoreGeneratorDefinitionSync, CoreGeneratorGroup, CoreGeneratorGroupSync, CoreGeneratorInstance, CoreGeneratorInstanceSync, CoreGeneratorValidator, CoreGeneratorValidatorSync, CoreGenericAccount, CoreGenericAccountSync, CoreGenericRepository, CoreGenericRepositorySync, CoreGlobalPermission, CoreGlobalPermissionSync, CoreGraphQLQuery, CoreGraphQLQueryGroup, CoreGraphQLQueryGroupSync, CoreGraphQLQuerySync, CoreGroup, CoreGroupSync, CoreIPAddressPool, CoreIPAddressPoolSync, CoreIPPrefixPool, CoreIPPrefixPoolSync, CoreMenu, CoreMenuItem, CoreMenuItemSync, CoreMenuSync, CoreNodeSync, CoreNumberPool, CoreNumberPoolSync, CoreObjectPermission, CoreObjectPermissionSync, CoreObjectTemplate, CoreObjectTemplateSync, CoreObjectThread, CoreObjectThreadSync, CorePasswordCredential, CorePasswordCredentialSync, CoreProfile, CoreProfileSync, CoreProposedChange, CoreProposedChangeSync, CoreReadOnlyRepository, CoreReadOnlyRepositorySync, CoreRepository, CoreRepositorySync, CoreRepositoryValidator, CoreRepositoryValidatorSync, CoreResourcePool, CoreResourcePoolSync, CoreSchemaCheck, CoreSchemaCheckSync, CoreSchemaValidator, CoreSchemaValidatorSync, CoreStandardCheck, CoreStandardCheckSync, CoreStandardGroup, CoreStandardGroupSync, CoreStandardWebhook, CoreStandardWebhookSync, CoreTaskTarget, CoreTaskTargetSync, CoreThread, CoreThreadComment, CoreThreadCommentSync, CoreThreadSync, CoreTransformJinja2, CoreTransformJinja2Sync, CoreTransformPython, CoreTransformPythonSync, CoreTransformation, CoreTransformationSync, CoreUserValidator, CoreUserValidatorSync, CoreValidator, CoreValidatorSync, CoreWebhook, CoreWebhookSync, InternalAccountToken, InternalAccountTokenSync, InternalRefreshToken, InternalRefreshTokenSync, IpamNamespace, IpamNamespaceSync, LineageOwner, LineageOwnerSync, LineageSource, LineageSourceSync
+from infrahub_sdk.protocols import (
+    BuiltinIPAddress,
+    BuiltinIPPrefix,
+    CoreArtifactTarget,
+    CoreNodeSync,
+    CoreObjectTemplateSync,
+    CoreProfileSync,
+    LineageSource,
+)
 
 if TYPE_CHECKING:
     from infrahub_sdk.node import RelatedNodeSync, RelationshipManagerSync
     from infrahub_sdk.protocols_base import (
-        AnyAttribute,
-        AnyAttributeOptional,
-        String,
-        StringOptional,
-        Integer,
-        IntegerOptional,
-        Boolean,
         BooleanOptional,
-        DateTime,
-        DateTimeOptional,
         Dropdown,
         DropdownOptional,
-        HashedPassword,
-        HashedPasswordOptional,
-        MacAddress,
-        MacAddressOptional,
+        Integer,
+        IntegerOptional,
         IPHost,
-        IPHostOptional,
         IPNetwork,
-        IPNetworkOptional,
-        JSONAttribute,
-        JSONAttributeOptional,
-        ListAttribute,
-        ListAttributeOptional,
-        URL,
-        URLOptional,
+        String,
+        StringOptional,
     )
 
 
@@ -46,21 +37,25 @@ class DcimConnector(CoreNodeSync):
     profiles: RelationshipManagerSync
     subscriber_of_groups: RelationshipManagerSync
 
+
 class TemplateDcimGenericDevice(CoreNodeSync):
     template_name: String
     member_of_groups: RelationshipManagerSync
     subscriber_of_groups: RelationshipManagerSync
+
 
 class TemplateDcimInterface(CoreNodeSync):
     template_name: String
     member_of_groups: RelationshipManagerSync
     subscriber_of_groups: RelationshipManagerSync
 
+
 class DcimEndpoint(CoreNodeSync):
     connector: RelatedNodeSync
     member_of_groups: RelationshipManagerSync
     profiles: RelationshipManagerSync
     subscriber_of_groups: RelationshipManagerSync
+
 
 class LocationGeneric(CoreNodeSync):
     description: StringOptional
@@ -73,6 +68,7 @@ class LocationGeneric(CoreNodeSync):
     subscriber_of_groups: RelationshipManagerSync
     tags: RelationshipManagerSync
 
+
 class OrganizationGeneric(CoreNodeSync):
     description: StringOptional
     name: String
@@ -81,12 +77,14 @@ class OrganizationGeneric(CoreNodeSync):
     subscriber_of_groups: RelationshipManagerSync
     tags: RelationshipManagerSync
 
+
 class ServiceGeneric(CoreNodeSync):
     account_reference: String
     service_identifier: String
     member_of_groups: RelationshipManagerSync
     profiles: RelationshipManagerSync
     subscriber_of_groups: RelationshipManagerSync
+
 
 class DcimGenericDevice(CoreNodeSync):
     description: StringOptional
@@ -100,6 +98,7 @@ class DcimGenericDevice(CoreNodeSync):
     subscriber_of_groups: RelationshipManagerSync
     tags: RelationshipManagerSync
 
+
 class LocationHosting(CoreNodeSync):
     shortname: String
     devices: RelationshipManagerSync
@@ -108,6 +107,7 @@ class LocationHosting(CoreNodeSync):
     profiles: RelationshipManagerSync
     subscriber_of_groups: RelationshipManagerSync
     vlans: RelationshipManagerSync
+
 
 class DcimInterface(CoreNodeSync):
     description: StringOptional
@@ -122,10 +122,12 @@ class DcimInterface(CoreNodeSync):
     subscriber_of_groups: RelationshipManagerSync
     tags: RelationshipManagerSync
 
+
 class CoreObjectComponentTemplate(CoreNodeSync):
     template_name: String
     member_of_groups: RelationshipManagerSync
     subscriber_of_groups: RelationshipManagerSync
+
 
 class DcimPhysicalDevice(CoreNodeSync):
     position: IntegerOptional
@@ -136,7 +138,6 @@ class DcimPhysicalDevice(CoreNodeSync):
     member_of_groups: RelationshipManagerSync
     profiles: RelationshipManagerSync
     subscriber_of_groups: RelationshipManagerSync
-
 
 
 class LocationCountry(LocationGeneric):
@@ -391,8 +392,6 @@ class IpamVLAN(CoreNodeSync):
     profiles: RelationshipManagerSync
     service: RelatedNodeSync
     subscriber_of_groups: RelationshipManagerSync
-
-
 
 
 class ProfileBuiltinIPAddress(LineageSource, CoreProfileSync, CoreNodeSync):
@@ -692,8 +691,6 @@ class ProfileServiceGeneric(LineageSource, CoreProfileSync, CoreNodeSync):
     subscriber_of_groups: RelationshipManagerSync
 
 
-
-
 class TemplateDcimDevice(LineageSource, TemplateDcimGenericDevice, CoreObjectTemplateSync, CoreNodeSync):
     description: StringOptional
     index: IntegerOptional
@@ -783,4 +780,3 @@ class TemplateIpamVLAN(LineageSource, CoreObjectComponentTemplate, CoreNodeSync)
     related_nodes: RelationshipManagerSync
     service: RelatedNodeSync
     subscriber_of_groups: RelationshipManagerSync
-

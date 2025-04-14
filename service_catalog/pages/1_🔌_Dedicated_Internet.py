@@ -28,14 +28,15 @@ def get_locations_options() -> list[str]:
 
 with st.form("new_dedicated_internet_form"):
     # Identifiers
-    service_identifier = st.text_input("Service Identifier")
-    account_reference = st.text_input("Account Reference")
+    service_identifier = st.text_input("Service Identifier", key="input-service-identifier")
+    account_reference = st.text_input("Account Reference", key="input-account-reference")
 
     # Location
     location_options: list = get_locations_options()
     location = st.selectbox(
         "Location",
         location_options,
+        key="select-location",
     )
 
     # Bandwidth
@@ -46,6 +47,7 @@ with st.form("new_dedicated_internet_form"):
     bandwidth = st.selectbox(
         "Bandwidth",
         options=bandwidth_options,
+        key="select-bandwidth",
     )
 
     # IP package
@@ -57,6 +59,7 @@ with st.form("new_dedicated_internet_form"):
     ip_package = st.select_slider(
         "IP Package",
         options=ip_package_options,
+        key="select-ip-package",
     )
 
     # Submit button
@@ -65,6 +68,7 @@ with st.form("new_dedicated_internet_form"):
 if submitted:
     with st.status("Submitting new service request...", expanded=True) as status:
         # TODO: Implement some validation in the inputs
+
         st.write("Creating branch...")
         branch_name: str = f"implement_{service_identifier.lower()}"
         create_branch(branch_name)

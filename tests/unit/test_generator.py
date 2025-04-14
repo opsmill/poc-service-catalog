@@ -1,8 +1,3 @@
-import pytest
-from fast_depends import Provider, dependency_provider
-from pytest_httpx import HTTPXMock
-
-from service_catalog.protocols_async import TemplateDcimDevice
 from infrahub_sdk.schema.repository import InfrahubRepositoryConfig
 
 

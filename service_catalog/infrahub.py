@@ -1,16 +1,13 @@
 from __future__ import annotations
 
 import os
-from typing import TYPE_CHECKING
 
 import streamlit as st
 from fast_depends import Depends, inject
 
 from infrahub_sdk import Config, InfrahubClientSync
-from infrahub_sdk.client import SchemaTypeSync
-
-if TYPE_CHECKING:
-    from infrahub_sdk.branch import BranchData
+from infrahub_sdk.branch import BranchData  # noqa: TC001
+from infrahub_sdk.client import SchemaTypeSync  # noqa: TC001
 
 
 def get_instance_address() -> str:
@@ -41,7 +38,7 @@ def create_branch(branch_name: str, client: InfrahubClientSync = Depends(get_cli
     return client.branch.create(branch_name=branch_name, sync_with_git=False)
 
 
-@inject
+@inject(cast=False)  # type: ignore[call-overload]
 def create_and_save(
     kind: type[SchemaTypeSync],
     data: dict,
@@ -57,7 +54,7 @@ def create_and_save(
     return infrahub_node
 
 
-@inject
+@inject(cast=False)  # type: ignore[call-overload]
 def filter_nodes(
     kind: type[SchemaTypeSync],
     filters: dict | None = None,
@@ -76,7 +73,7 @@ def filter_nodes(
     )
 
 
-@inject
+@inject(cast=False)  # type: ignore[call-overload]
 def get_dropdown_options(
     kind: str | type[SchemaTypeSync],
     attribute_name: str,
@@ -85,6 +82,7 @@ def get_dropdown_options(
 ) -> list[str]:
     """Get dropdown options for a given attribute."""
     # Get schema for this kind
+
     schema = client.schema.get(kind=kind, branch=branch)
 
     # Find desired attribute
