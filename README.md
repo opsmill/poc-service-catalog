@@ -9,9 +9,9 @@ This repository is a proof of concept for service catalog using Infrahub and Str
 
 - Clone this repo `git clone https://github.com/opsmill/poc-service-catalog.git`
 - Navigate to the directory `cd poc-service-catalog`
-- Start Infrahub with docker compose `curl https://infrahub.opsmill.io | docker compose -f - up -d`
 - Setup your poetry environment `poetry shell` and `poetry install`
 - Export credentials `export INFRAHUB_ADDRESS='http://localhost:8000'; export INFRAHUB_API_TOKEN='06438eb2-8019-4776-878c-0941b1f1d1ec'`
+- Start infrahub `invoke start`
 - Load the schema `infrahubctl schema load schemas/`
 - Load Initial Data `infrahubctl schema load data/`
 

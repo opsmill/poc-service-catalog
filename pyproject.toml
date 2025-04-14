@@ -76,6 +76,7 @@ ignore = [
     "G004",   # Logging statement uses f-string
     "S311",   # Standard pseudo-random generators are not suitable
     "LOG004", # `.exception()` call outside exception handlers
+    "FBT",    # Boolean-typed positional argument in function definition
 ]
 
 
