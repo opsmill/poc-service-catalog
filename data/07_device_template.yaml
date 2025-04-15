@@ -6,7 +6,7 @@ spec:
   data:
     - template_name: "Generic switch"
       status: "active"
-      role: "tor"
+      role: "core"
       device_type: "Generic switch"
       interfaces:
         kind: TemplateDcimInterfaceL2
@@ -17,40 +17,73 @@ spec:
             role: customer
             enabled: false
             status: free
-
           - template_name: "GenericSwitchEthernet5"
             name: "Ethernet5"
             speed: 1000
             role: customer
             enabled: false
             status: free
-
           - template_name: "GenericSwitchEthernet6"
             name: "Ethernet6"
             speed: 1000
             role: customer
             enabled: false
             status: free
-
           - template_name: "GenericSwitchEthernet7"
             name: "Ethernet7"
             speed: 1000
             role: customer
             enabled: false
             status: free
-
           - template_name: "GenericSwitchEthernet8"
             name: "Ethernet8"
             speed: 1000
             role: customer
             enabled: false
             status: free
-
           - template_name: "GenericSwitchEthernet9"
             name: "Ethernet9"
             speed: 1000
             role: customer
             enabled: false
+            status: free
+
+    - template_name: "Generic router"
+      status: "active"
+      role: "edge"
+      device_type: "Generic router"
+      interfaces:
+        kind: TemplateDcimInterfaceL3
+        data:
+          - template_name: "GenericRouterEthernet1"
+            name: "Ethernet1"
+            speed: 1000
+            role: backbone
+            description: "Connected to peer router"
+            status: free
+          - template_name: "GenericRouterEthernet2"
+            name: "Ethernet2"
+            speed: 1000
+            role: backbone
+            description: "Connected to switch 1"
+            status: free
+          - template_name: "GenericRouterEthernet3"
+            name: "Ethernet3"
+            speed: 1000
+            role: backbone
+            description: "Connected to switch 2"
+            status: free
+          - template_name: "GenericRouterEthernet4"
+            name: "Ethernet4"
+            speed: 1000
+            role: upstream
+            description: "Connected to transit"
+            status: free
+          - template_name: "GenericRouterEthernet5"
+            name: "Ethernet5"
+            speed: 1000
+            role: upstream
+            description: "Connected to transit"
             status: free
 
         # BLOCKED by https://github.com/opsmill/infrahub/issues/6287
