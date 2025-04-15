@@ -110,6 +110,7 @@ max-complexity = 17
     "ANN201",  # Missing return type annotation for public function
     "ANN202",  # Missing return type annotation for private function
     "ANN204",  # Missing return type annotation for special method
+    "PLR6301", # Method `XXXX` could be a function, class method, or static method
 ]
 
 "schemas/data.py" = [

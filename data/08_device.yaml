@@ -75,4 +75,3 @@ spec:
       status: active
       index: 2
       object_template: "Generic router"
-
