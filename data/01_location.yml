@@ -1,0 +1,47 @@
+---
+apiVersion: infrahub.app/v1
+kind: Object
+spec:
+  kind: LocationCountry
+  data:
+    - name: "France"
+      shortname: "FR"
+      timezone: "CET"
+      children:
+        kind: LocationMetro
+        data:
+          - name: "Lyon"
+            shortname: "lyn"
+            children:
+              kind: LocationSite
+              data:
+                - name: "Lyon 1"
+                  shortname: "lyn01"
+          - name: "Paris"
+            shortname: "par"
+            children:
+              kind: LocationSite
+              data:
+                - name: "Paris 1"
+                  shortname: "par01"
+    - name: "Belgium"
+      shortname: "BE"
+      timezone: "CET"
+      children:
+        kind: LocationMetro
+        data:
+          - name: "Brussels"
+            shortname: "bru"
+            children:
+              kind: LocationSite
+              data:
+                - name: "Brussels 1"
+                  shortname: "bru01"
+    - name: "Netherlands"
+      shortname: "NL"
+      timezone: "CET"
+      children:
+        kind: LocationMetro
+        data:
+          - name: "Amsterdam"
+            shortname: "ams"

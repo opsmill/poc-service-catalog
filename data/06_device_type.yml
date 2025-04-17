@@ -1,0 +1,10 @@
+---
+apiVersion: infrahub.app/v1
+kind: Object
+spec:
+  kind: DcimDeviceType
+  data:
+    - name: "Generic router"
+      manufacturer: "Generic Manufacturer"
+    - name: "Generic switch"
+      manufacturer: "Generic Manufacturer"
