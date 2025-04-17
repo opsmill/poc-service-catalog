@@ -35,6 +35,9 @@ class TestServiceCatalog(TestInfrahubDockerClient):
 
     @pytest.fixture(scope="class")
     def override_client(self, provider: Provider, client_sync: InfrahubClientSync) -> None:
+        """
+        Override the client that will be returned by FastDepends.
+        """
         def get_test_client(branch: str = "main") -> InfrahubClientSync:
             return client_sync
 
@@ -43,12 +46,18 @@ class TestServiceCatalog(TestInfrahubDockerClient):
     def test_schema_load(
         self, client_sync: InfrahubClientSync, schema_definition: list[SchemaFile], default_branch: str
     ):
+        """
+        Load the schema from the schema directory into the infrahub instance.
+        """
         logger.info("Starting test: test_schema_load")
 
         client_sync.schema.load(schemas=[item.content for item in schema_definition])
         client_sync.schema.wait_until_converged(branch=default_branch)
 
     async def test_data_load(self, client: InfrahubClient, data_dir: Path, default_branch: str):
+        """
+        Load the data from the data directory into the infrahub instance.
+        """
         logger.info("Starting test: test_data_load")
 
         await client.schema.all()
@@ -68,6 +77,10 @@ class TestServiceCatalog(TestInfrahubDockerClient):
     async def test_add_repository(
         self, client: InfrahubClient, root_dir: Path, default_branch: str, remote_repos_dir: Path
     ) -> None:
+        """
+        Add the local directory as a repository in the infrahub instance in order to validate the import of the repository
+        and have the generator operational in infrahub.
+        """
         repo = GitRepo(name="poc-service-catalog", src_directory=root_dir, dst_directory=remote_repos_dir)
         await repo.add_to_infrahub(client=client)
         in_sync = await repo.wait_for_sync_to_complete(client=client)
@@ -77,6 +90,9 @@ class TestServiceCatalog(TestInfrahubDockerClient):
         assert repos
 
     async def test_portal(self, override_client, client: InfrahubClient, default_branch: str):
+        """
+        Test the streamlit app on top of a running infrahub instance.
+        """
         app = AppTest.from_file("service_catalog/pages/1_🔌_Dedicated_Internet.py").run()
 
         app.text_input("input-service-identifier").set_value("test-12345").run()

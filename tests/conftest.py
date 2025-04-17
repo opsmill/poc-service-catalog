@@ -1,11 +1,12 @@
 import json
 from pathlib import Path
+from typing import Any
 
 import pytest
 from fast_depends import dependency_provider
 from pytest_httpx import HTTPXMock
 
-from infrahub_sdk import InfrahubClientSync
+from infrahub_sdk import InfrahubClientSync, Config
 from infrahub_sdk.ctl.repository import get_repository_config
 from infrahub_sdk.schema.repository import InfrahubRepositoryConfig
 from infrahub_sdk.yaml import SchemaFile
@@ -53,6 +54,19 @@ def provider():
 @pytest.fixture(scope="session")
 def repository_config(root_dir: Path) -> InfrahubRepositoryConfig:
     return get_repository_config(repo_config_file=root_dir / ".infrahub.yml")
+
+
+@pytest.fixture
+def schema_01(fixtures_dir: Path) -> dict[str, Any]:
+    response_text = (fixtures_dir / "schemas" / "schema01.json").read_text(encoding="UTF-8")
+    return json.loads(response_text)
+
+
+@pytest.fixture
+def schema_01_client(schema_01: dict[str, Any]) -> InfrahubClientSync:
+    client = InfrahubClientSync(address="http://mock", config=Config(insert_tracker=True))
+    client.schema.set_cache(schema_01)
+    return client
 
 
 @pytest.fixture

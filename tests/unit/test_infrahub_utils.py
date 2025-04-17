@@ -1,14 +1,15 @@
+import pytest
 from fast_depends import Provider
 from pytest_httpx import HTTPXMock
-
+from typing import Any
 from infrahub_sdk import InfrahubClientSync
 from service_catalog.infrahub import get_client, get_dropdown_options
 from service_catalog.protocols_sync import ServiceDedicatedInternet
 
 
-def test_get_dropdown_options_txt(provider: Provider, mock_schema_query_01: HTTPXMock):
+def test_get_dropdown_options_txt(provider: Provider, schema_01_client):
     def get_test_client(branch: str = "main") -> InfrahubClientSync:
-        return InfrahubClientSync(address="http://mock")
+        return schema_01_client
 
     provider.override(get_client, get_test_client)
 
@@ -22,9 +23,9 @@ def test_get_dropdown_options_txt(provider: Provider, mock_schema_query_01: HTTP
     ]
 
 
-def test_get_dropdown_options_protocols(provider: Provider, mock_schema_query_01: HTTPXMock):
+def test_get_dropdown_options_protocols(provider: Provider, schema_01_client):
     def get_test_client(branch: str = "main") -> InfrahubClientSync:
-        return InfrahubClientSync(address="http://mock")
+        return schema_01_client
 
     provider.override(get_client, get_test_client)
 

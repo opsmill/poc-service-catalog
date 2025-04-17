@@ -86,24 +86,7 @@ spec:
             description: "Connected to transit"
             status: free
 
-        # BLOCKED by https://github.com/opsmill/infrahub/issues/6287
-        # - kind: TemplateDcimInterfaceL2
-        #   data:
-        #     template_name: "GenericSwitchEthernet4"
-        #     name: "Ethernet4"
-        #     speed: 1000
-        #     role: customer
-        #     enabled: false
-        #     status: free
 
-        # - kind: TemplateDcimInterfaceL2
-        #   data:
-        #     template_name: "GenericSwitchEthernet5"
-        #     name: "Ethernet5"
-        #     speed: 1000
-        #     role: customer
-        #     enabled: false
-        #     status: free
 
         # - kind: TemplateDcimInterfaceL2
         #   data:
