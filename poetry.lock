@@ -244,7 +244,7 @@ files = [
     {file = "colorama-0.4.6-py2.py3-none-any.whl", hash = "sha256:4f1d9991f5acc0ca119f9d443620b77f9d6b33703e51011c16baf57afb285fc6"},
     {file = "colorama-0.4.6.tar.gz", hash = "sha256:08695f5cb7ed6e0531a20572697297273c47b8cae5a63ffc6d6ed5c201be6e44"},
 ]
-markers = {main = "sys_platform == \"win32\" or platform_system == \"Windows\"", dev = "sys_platform == \"win32\""}
+markers = {main = "platform_system == \"Windows\" or sys_platform == \"win32\"", dev = "sys_platform == \"win32\""}
 
 [[package]]
 name = "docker"
@@ -551,8 +551,8 @@ tests = ["Jinja2 (>=3,<4)", "pytest", "pyyaml (>=6,<7)", "rich (>=13,<14)"]
 [package.source]
 type = "git"
 url = "https://github.com/opsmill/infrahub-sdk-python.git"
-reference = "dga-20250413-integration"
-resolved_reference = "8db70276209ccf665c63629e4def63c7d3a010c4"
+reference = "develop"
+resolved_reference = "7b264c2589c19d40a91c51f6d14fc9f3da7a79e5"
 
 [[package]]
 name = "infrahub-testcontainers"
@@ -2478,4 +2478,4 @@ dev = ["doc8", "flake8", "flake8-import-order", "rstcheck[sphinx]", "sphinx"]
 [metadata]
 lock-version = "2.1"
 python-versions = "^3.10, <3.14"
-content-hash = "25d516147db00d9b05b757552b14b8d74c4aa3ede2db636b491c072ef7fdeb1d"
+content-hash = "918bdfd07b6327950b3a5be4d0b97d4a9ee0a2475916ccf1c790444603b0d1d8"

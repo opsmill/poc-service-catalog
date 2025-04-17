@@ -8,9 +8,9 @@ from service_catalog.infrahub import get_client
 
 
 @pytest.mark.skip(reason="Not working yet")
-def test_portal(provider: Provider, mock_schema_query_01: HTTPXMock):
+def test_portal(provider: Provider, schema_01_client: InfrahubClientSync):
     def get_test_client(branch: str = "main") -> InfrahubClientSync:
-        return InfrahubClientSync(address="http://mock", config=Config(insert_tracker=True))
+        return schema_01_client
 
     provider.override(get_client, get_test_client)
 
