@@ -1,9 +1,19 @@
+from __future__ import annotations
+
 import logging
 import random
 
 from infrahub_sdk.generator import InfrahubGenerator
 from infrahub_sdk.node import InfrahubNode
 from infrahub_sdk.protocols import CoreIPPrefixPool, CoreNumberPool
+from service_catalog.protocols_async import (
+    DcimDevice,
+    DcimInterfaceL3,
+    IpamIPAddress,
+    IpamPrefix,
+    IpamVLAN,
+    ServiceDedicatedInternet,
+)
 
 ACTIVE_STATUS = "active"
 SERVICE_VLAN_POOL: str = "Customer vlan pool"
@@ -13,14 +23,18 @@ IP_PACKAGE_TO_PREFIX_SIZE: dict[str, int] = {"small": 29, "medium": 28, "large":
 
 
 class DedicatedInternetGenerator(InfrahubGenerator):
-    customer_service = None
+    customer_service: ServiceDedicatedInternet | None = None
+    allocated_vlan: IpamVLAN | None = None
+    allocated_prefix: IpamPrefix | None = None
+    gateway_ip: IpamIPAddress | None = None
+
     log = logging.getLogger("infrahub.tasks")
 
     async def generate(self, data: dict) -> None:
         service_dict: dict = data["ServiceDedicatedInternet"]["edges"][0]["node"]
 
         # Translate the dict to proper object
-        self.customer_service = await InfrahubNode.from_graphql(
+        self.customer_service: ServiceDedicatedInternet = await InfrahubNode.from_graphql(
             client=self.client,
             data=service_dict,
             branch=self.branch,
@@ -58,7 +72,7 @@ class DedicatedInternetGenerator(InfrahubGenerator):
 
         # Craft and save the vlan
         self.allocated_vlan = await self.client.create(
-            kind="IpamVLAN",
+            kind=IpamVLAN,
             name=f"vlan__{self.customer_service.service_identifier.value}",
             vlan_id=resource_pool,  # Here we get the vlan ID from the pool
             description=f"VLAN allocated to service {self.customer_service.service_identifier.value}",
@@ -95,6 +109,7 @@ class DedicatedInternetGenerator(InfrahubGenerator):
         # Create resource from the pool
         self.allocated_prefix = await self.client.allocate_next_ip_prefix(
             resource_pool,
+            kind=IpamPrefix,
             data=prefix_data,
             prefix_length=self.prefix_length,
             identifier=self.customer_service.service_identifier.value,
@@ -139,7 +154,7 @@ class DedicatedInternetGenerator(InfrahubGenerator):
 
             # Find the switch on the site
             switch = await self.client.get(
-                kind="DcimDevice",
+                kind=DcimDevice,
                 location__ids=[self.customer_service.location.id],
                 role__value="core",
                 index__value=self.index,
@@ -190,7 +205,7 @@ class DedicatedInternetGenerator(InfrahubGenerator):
 
         # Find the corresponding router
         router = await self.client.get(
-            kind="DcimDevice",
+            kind=DcimDevice,
             location__ids=[self.customer_service.location.id],
             role__value="edge",
             index__value=self.index,
@@ -204,7 +219,7 @@ class DedicatedInternetGenerator(InfrahubGenerator):
 
         # Create interface
         gateway_interface = await self.client.create(
-            kind="DcimInterfaceL3",
+            kind=DcimInterfaceL3,
             name=f"vlan_{vlan_id!s}",
             speed=1000,
             device=router,
@@ -222,7 +237,7 @@ class DedicatedInternetGenerator(InfrahubGenerator):
 
         # Create IP object
         self.gateway_ip = await self.client.create(
-            kind="IpamIPAddress",
+            kind=IpamIPAddress,
             address=address,
             service=self.customer_service,
             interface=gateway_interface,

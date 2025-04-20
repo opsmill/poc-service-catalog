@@ -4,7 +4,7 @@ import pandas as pd
 import streamlit as st
 
 from service_catalog.infrahub import filter_nodes
-from service_catalog.protocols import ServiceDedicatedInternet
+from service_catalog.protocols_sync import ServiceDedicatedInternet
 
 st.set_page_config(page_title="Service Requests", page_icon="📦")
 
