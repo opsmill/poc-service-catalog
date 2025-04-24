@@ -4,13 +4,124 @@ version = "0.1.0"
 description = ""
 authors = ["OpsMill <info@opsmill.com>"]
 readme = "README.md"
-package-mode = false
+
+packages = [
+    { include = "service_catalog" },
+]
 
 [tool.poetry.dependencies]
 python = "^3.10, <3.14"
-infrahub-sdk = {extras = ["all"], version = "^1.9.2"}
+infrahub-sdk = {git = "https://github.com/opsmill/infrahub-sdk-python.git", rev = "develop", extras = ["all"]}
 streamlit = "^1.44.0"
+watchdog = "^6.0.0"
+fast-depends = "^2.4.12"
 
+[tool.poetry.group.dev.dependencies]
+pytest-httpx = "^0.35.0"
+pytest-clarity = "^1.0.1"
+pytest-asyncio = "^0.26.0"
+ruff = "^0.11.2"
+mypy = "^1.15.0"
+invoke = "^2.2.0"
+yamllint = "^1.37.0"
+infrahub-testcontainers = "^1.2.5"
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
+testpaths = ["tests"]
+filterwarnings = []
+addopts = "-vs"
+
+[tool.mypy]
+pretty = true
+ignore_missing_imports = true
+disallow_untyped_defs = true
+
+[tool.ruff]
+line-length = 120
+
+exclude = [
+    ".git",
+    ".venv",
+    "env",
+    "_build",
+    "build",
+    "dist",
+    "examples",
+]
+
+
+[tool.ruff.lint]
+preview = true
+
+task-tags = ["FIXME", "TODO"]
+
+select = ["ALL"]
+
+ignore = [
+    "D",      # pydocstyle
+    "DOC",    # pydoclint
+    "CPY",    # flake8-copyright
+    "T201",   # use of `print`
+    "ISC",    # flake8-implicit-str-concat
+    "COM812", # missing-trailing-comma
+    "N999",   # Invalid module name
+    "PD901",  # Avoid using the generic variable name `df` for DataFrames
+    "TD",
+    "FIX",    # TODO
+    "TRY",
+    "B008",   # Do not perform function call `Depends` in argument defaults
+    "EM102",  # Exception must not use an f-string literal
+    "SIM117", # Use a single `with` statement with multiple contexts instead of nested `with` statements
+    "G004",   # Logging statement uses f-string
+    "S311",   # Standard pseudo-random generators are not suitable
+    "LOG004", # `.exception()` call outside exception handlers
+    "FBT",    # Boolean-typed positional argument in function definition
+]
+
+
+#https://docs.astral.sh/ruff/formatter/black/
+[tool.ruff.format]
+quote-style = "double"
+indent-style = "space"
+skip-magic-trailing-comma = false
+line-ending = "auto"
+
+[tool.ruff.lint.isort]
+known-first-party = ["infrahub_sdk", "infrahub_ctl"]
+
+[tool.ruff.lint.pycodestyle]
+max-line-length = 150
+
+[tool.ruff.lint.mccabe]
+# Target max-complexity=10
+max-complexity = 17
+
+[tool.ruff.lint.per-file-ignores]
+"tests/**/*.py" = [
+    "PLR2004", # Magic value used in comparison
+    "S101",    # Use of assert detected
+    "S105",    # Possible hardcoded password assigned to variable
+    "S106",    # Possible hardcoded password assigned to argument
+    "ARG001",  # Unused function argument
+    "ARG002",  # Unused method argument
+    "ANN001",  # Missing type annotation for function argument
+    "ANN201",  # Missing return type annotation for public function
+    "ANN202",  # Missing return type annotation for private function
+    "ANN204",  # Missing return type annotation for special method
+    "PLR6301", # Method `XXXX` could be a function, class method, or static method
+]
+
+"schemas/data.py" = [
+    "ARG001",    # Unused function argument
+    "ANN201",  # Missing return type annotation for public function
+    "B007",    # Loop control variable `node` not used within loop body
+    "ANN001",  # Missing type annotation
+]
+
+"tasks.py" = [
+    "PLC0415", # `import` should be at the top-level of a file
+]
 
 [build-system]
 requires = ["poetry-core"]

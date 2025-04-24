@@ -1,0 +1,8 @@
+---
+apiVersion: infrahub.app/v1
+kind: Object
+spec:
+  kind: CoreReadOnlyRepository
+  data:
+    - name: "poc-service-catalog"
+      location: "https://github.com/opsmill/poc-service-catalog.git"

@@ -142,7 +142,7 @@ LOCATIONS = [
                     {
                         "name": "Paris 1",
                         "shortname": "par01",
-                    }
+                    },
                 ],
             },
         ],
@@ -194,9 +194,7 @@ async def create_org(client: InfrahubClient, log: logging.Logger, branch: str) -
 
     for type_name in DEVICE_TYPES:
         # here we +1 to not have switch 0
-        device_type_obj = await client.create(
-            kind="DcimDeviceType", name=type_name, manufacturer=manufacturer_obj
-        )
+        device_type_obj = await client.create(kind="DcimDeviceType", name=type_name, manufacturer=manufacturer_obj)
 
         await device_type_obj.save(allow_upsert=True)
 
@@ -213,9 +211,7 @@ async def create_org(client: InfrahubClient, log: logging.Logger, branch: str) -
     await tag_obj.save(allow_upsert=True)
 
 
-async def create_location(
-    client: InfrahubClient, log: logging.Logger, branch: str
-) -> None:
+async def create_location(client: InfrahubClient, log: logging.Logger, branch: str) -> None:
     for country in LOCATIONS:
         # Create country
         country_obj = await client.create(
@@ -245,9 +241,7 @@ async def create_location(
                 await site_obj.save(allow_upsert=True)
 
 
-async def create_prefixes(
-    client: InfrahubClient, log: logging.Logger, branch: str
-) -> None:
+async def create_prefixes(client: InfrahubClient, log: logging.Logger, branch: str) -> None:
     # Create l2 domain
     l2_domain = await client.create(
         kind="IpamL2Domain",
@@ -310,9 +304,7 @@ async def create_prefixes(
     await customer_vlan_pool.save(allow_upsert=True)
 
 
-async def create_interfaces(
-    client: InfrahubClient, device_obj, interface_list: list
-) -> None:
+async def create_interfaces(client: InfrahubClient, device_obj, interface_list: list) -> None:
     # Prepare the batch object for interfaces
     interface_batch = await client.create_batch()
 
@@ -339,35 +331,27 @@ async def create_interfaces(
             interface_data["enabled"] = interface_template["enabled"]
 
         # Create interface
-        interface_obj = await client.create(
-            kind=interface_template["kind"], data=interface_data
-        )
+        interface_obj = await client.create(kind=interface_template["kind"], data=interface_data)
 
         # Add save operation to the batch
-        interface_batch.add(
-            task=interface_obj.save, node=interface_obj, allow_upsert=True
-        )
+        interface_batch.add(task=interface_obj.save, node=interface_obj, allow_upsert=True)
 
     # Execute the batch
     async for node, _ in interface_batch.execute():
         pass  # TODO: Improve that part
 
 
-async def create_devices(
-    client: InfrahubClient, log: logging.Logger, branch: str
-) -> None:
+async def create_devices(client: InfrahubClient, log: logging.Logger, branch: str) -> None:
     # Query related info
     site_list = await client.all("LocationSite")
-    management_pool = await client.get(
-        name__value="Management IP pool", kind="CoreIPAddressPool"
-    )
+    management_pool = await client.get(name__value="Management IP pool", kind="CoreIPAddressPool")
 
     for site in site_list:
         for i in range(1, 3):
             # Create router object
             router_obj = await client.create(
                 kind="DcimDevice",
-                name=f"rb0{str(i)}-{site.shortname.value}",
+                name=f"rb0{i!s}-{site.shortname.value}",
                 description="Border router.",
                 status="active",
                 role="edge",
@@ -385,7 +369,7 @@ async def create_devices(
             # Create switch object
             switch_obj = await client.create(
                 kind="DcimDevice",
-                name=f"sw0{str(i)}-{site.shortname.value}",
+                name=f"sw0{i!s}-{site.shortname.value}",
                 description="Core switch.",
                 status="active",
                 role="core",
@@ -400,9 +384,7 @@ async def create_devices(
             await create_interfaces(client, switch_obj, INTERFACE_TEMPLATES["switch"])
 
 
-async def run(
-    client: InfrahubClient, log: logging.Logger, branch: str, **kwargs
-) -> None:
+async def run(client: InfrahubClient, log: logging.Logger, branch: str) -> None:
     log.info("Generate all org related data...")
     await create_org(client=client, branch=branch, log=log)
 
