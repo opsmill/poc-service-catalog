@@ -13,11 +13,9 @@ This repository is a proof of concept for service catalog using Infrahub and Str
 - Export credentials `export INFRAHUB_ADDRESS='http://localhost:8000'; export INFRAHUB_API_TOKEN='06438eb2-8019-4776-878c-0941b1f1d1ec'`
 - Start infrahub `invoke start`
 - Load the schema `infrahubctl schema load schemas/`
-- Load Initial Data `infrahubctl schema load data/`
-
-- Login to Infrahub UI `http://127.0.0.1:8000/login` with login `admin` and password `infrahub`
-- Browse to [Create repository page](http://127.0.0.1:8000/objects/CoreGenericRepository) and create a new `ReadOnlyRepository` with location `https://github.com/opsmill/poc-service-catalog.git`
-
+- Load initial data `infrahubctl object load data/`
+- Connect read-only repository `infrahubctl repository add --ref main --read-only infrahub-demo https://github.com/opsmill/poc-service-catalog.git`
 - Spin service catalog app `streamlit run service_catalog/🏠_Home_Page.py`
 
-At this point you can connect to service catalog on port 8501 [Service catalog](http://localhost:8501/)
+👉 Login to [Infrahub UI](http://localhost:8000/login) on port `8000` with username `admin` and password `infrahub`
+👉 You can connect to service catalog on port 8501 [Service catalog](http://localhost:8501/)
