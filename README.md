@@ -19,4 +19,4 @@ This repository is a proof of concept for service catalog using Infrahub and Str
 
 👉 Login to [Infrahub UI](http://localhost:8000/login) on port `8000` with username `admin` and password `infrahub`
 
-👉 You can connect to service catalog on port 8501 [Service catalog](http://localhost:8501/)
+👉 You can connect to [Service catalog](http://localhost:8501/) on port `8501`
