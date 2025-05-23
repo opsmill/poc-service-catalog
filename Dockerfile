@@ -1,23 +1,11 @@
-# Use an official Python base image
-FROM python:3.11
+ARG INFRAHUB_BASE_VERSION=1.2.11
+FROM registry.opsmill.io/opsmill/infrahub:${INFRAHUB_BASE_VERSION}
 
-# Set working directory
-WORKDIR /app
+# Install specific package
+WORKDIR /opt/local
+COPY pyproject.toml poetry.lock README.md ./
+COPY service_catalog/ service_catalog/
 
-# Install Poetry
-RUN curl -sSL https://install.python-poetry.org | python3 -
-ENV PATH="${PATH}:/root/.local/bin"
-RUN poetry config virtualenvs.create false
+RUN poetry install --no-ansi --no-interaction
 
-COPY . /app
-
-# Install dependencies
-RUN poetry install
-
-# Copy the rest of the application
-
-# Expose the port Streamlit uses
-EXPOSE 8501
-
-# Run the application
-CMD ["poetry", "run", "streamlit", "run", "service_catalog/🏠_Home_Page.py"]
+WORKDIR /source
