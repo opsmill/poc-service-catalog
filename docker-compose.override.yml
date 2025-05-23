@@ -1,16 +1,17 @@
 ---
-x-infrahub-custom-build: &infrahub_custom_build
+x-service-catalog: &service-catalog
   image: opsmill/poc-service-catalog:${INFRAHUB_BASE_VERSION:-1.2.11}
   build:
     context: .
     dockerfile: Dockerfile
-    args:
-      INFRAHUB_BASE_VERSION: "${INFRAHUB_BASE_VERSION:-1.2.11}"
+  ports:
+    - 8501:8501
 
 services:
-  infrahub-server:
-    <<: *infrahub_custom_build
-  task-worker:
-    <<: *infrahub_custom_build
-  task-manager:
-    <<: *infrahub_custom_build
+  service-catalog: 
+    <<: *service-catalog
+    environment:
+      INFRAHUB_ADDRESS: http://infrahub-server:8000
+      INFRAHUB_API_TOKEN: 44af444d-3b26-410d-9546-b758657e026c    
+    depends_on:
+      - infrahub-server
