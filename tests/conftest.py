@@ -6,7 +6,7 @@ import pytest
 from fast_depends import dependency_provider
 from pytest_httpx import HTTPXMock
 
-from infrahub_sdk import InfrahubClientSync, Config
+from infrahub_sdk import Config, InfrahubClientSync
 from infrahub_sdk.ctl.repository import get_repository_config
 from infrahub_sdk.schema.repository import InfrahubRepositoryConfig
 from infrahub_sdk.yaml import SchemaFile
