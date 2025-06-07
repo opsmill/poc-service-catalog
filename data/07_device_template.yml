@@ -86,8 +86,6 @@ spec:
             description: "Connected to transit"
             status: free
 
-
-
         # - kind: TemplateDcimInterfaceL2
         #   data:
         #     template_name: "GenericSwitchEthernet6"
