@@ -104,6 +104,7 @@ ressources
 REST
 schema_mapping
 sdk
+Streamlit
 subcommand
 subnet
 template_path
