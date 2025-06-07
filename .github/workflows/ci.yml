@@ -77,7 +77,7 @@ jobs:
     timeout-minutes: 60
     env:
       INFRAHUB_DB_TYPE: neo4j
-      INFRAHUB_API_TOKEN: '06438eb2-8019-4776-878c-0941b1f1d1ec'
+      # INFRAHUB_API_TOKEN: '06438eb2-8019-4776-878c-0941b1f1d1ec'
       INFRAHUB_TIMEOUT: 600
       INFRAHUB_TESTING_LOG_LEVEL: INFO
     steps:
