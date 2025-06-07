@@ -38,6 +38,7 @@ class TestServiceCatalog(TestInfrahubDockerClient):
         """
         Override the client that will be returned by FastDepends.
         """
+
         def get_test_client(branch: str = "main") -> InfrahubClientSync:
             return client_sync
 

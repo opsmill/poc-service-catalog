@@ -1,7 +1,5 @@
-import pytest
 from fast_depends import Provider
-from pytest_httpx import HTTPXMock
-from typing import Any
+
 from infrahub_sdk import InfrahubClientSync
 from service_catalog.infrahub import get_client, get_dropdown_options
 from service_catalog.protocols_sync import ServiceDedicatedInternet
