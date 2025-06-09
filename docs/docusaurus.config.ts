@@ -11,7 +11,7 @@ const config: Config = {
   baseUrl: '/',
 
   organizationName: 'opsmill',
-  projectName: 'poc-service-catalog',
+  projectName: 'demo-service-catalog',
 
   onBrokenLinks: 'throw',
   onBrokenMarkdownLinks: 'throw',
@@ -26,7 +26,7 @@ const config: Config = {
       "classic",
       {
         docs: {
-          editUrl: "https://github.com/opsmill/poc-service-catalog/tree/main/docs",
+          editUrl: "https://github.com/opsmill/infrahub-demo-service-catalog/tree/main/docs",
           routeBasePath: "/",
           sidebarCollapsed: true,
           sidebarPath: "./sidebars.ts",
@@ -54,7 +54,7 @@ const config: Config = {
           label: "PoC Service Catalog",
         },
         {
-          href: "https://github.com/opsmill/poc-service-catalog",
+          href: "https://github.com/opsmill/infrahub-demo-service-catalog",
           position: "right",
           className: "header-github-link",
           "aria-label": "GitHub repository",

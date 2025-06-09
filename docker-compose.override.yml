@@ -1,6 +1,6 @@
 ---
 x-infrahub-custom-build: &infrahub_custom_build
-  image: opsmill/poc-service-catalog:${INFRAHUB_BASE_VERSION:-1.2.11}
+  image: opsmill/infrahub-demo-service-catalog:${INFRAHUB_BASE_VERSION:-1.2.11}
   build:
     context: .
     dockerfile: Dockerfile
