@@ -2,8 +2,8 @@
 extends: default
 
 ignore: |
-  /.venv
-  /examples
+  /.git
+  /.github
 
 rules:
   new-lines: disable

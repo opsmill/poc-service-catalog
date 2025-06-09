@@ -4,5 +4,5 @@ kind: Object
 spec:
   kind: CoreReadOnlyRepository
   data:
-    - name: "poc-service-catalog"
-      location: "https://github.com/opsmill/poc-service-catalog.git"
+    - name: "infrahub-demo-service-catalog"
+      location: "https://github.com/opsmill/infrahub-demo-service-catalog.git"
