@@ -1,11 +1,11 @@
 ---
 x-infrahub-custom-build: &infrahub_custom_build
-  image: opsmill/infrahub-demo-service-catalog:${INFRAHUB_BASE_VERSION:-1.2.11}
+  image: opsmill/infrahub-demo-service-catalog:${INFRAHUB_BASE_VERSION:-1.3.2}
   build:
     context: .
     dockerfile: Dockerfile
     args:
-      INFRAHUB_BASE_VERSION: "${INFRAHUB_BASE_VERSION:-1.2.11}"
+      INFRAHUB_BASE_VERSION: "${INFRAHUB_BASE_VERSION:-1.3.2}"
 
 services:
   service-catalog:
