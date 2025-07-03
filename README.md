@@ -16,4 +16,4 @@ This repository is a proof of concept for service catalog using Infrahub and Str
 
 ## Running the demo
 
-Documentation for loading and using this demo is available on the [PoC Service Catalog](https://docs.infrahub.app/demo/demo-service-catalog/) docs site.
+Documentation for loading and using this demo is available on the [PoC Service Catalog](https://docs.infrahub.app/demo-service-catalog) docs site.
