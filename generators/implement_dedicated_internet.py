@@ -7,7 +7,7 @@ from infrahub_sdk.generator import InfrahubGenerator
 from infrahub_sdk.node import InfrahubNode
 from infrahub_sdk.protocols import CoreIPPrefixPool, CoreNumberPool
 
-from ..service_catalog.protocols_async import (  # noqa: TID252
+from service_catalog.protocols_async import (
     DcimDevice,
     DcimInterfaceL3,
     IpamIPAddress,
@@ -35,14 +35,16 @@ class DedicatedInternetGenerator(InfrahubGenerator):
         service_dict: dict = data["ServiceDedicatedInternet"]["edges"][0]["node"]
 
         # Translate the dict to proper object
-        self.customer_service: ServiceDedicatedInternet = await InfrahubNode.from_graphql(
-            client=self.client,
-            data=service_dict,
-            branch=self.branch,
+        self.customer_service: ServiceDedicatedInternet = (
+            await InfrahubNode.from_graphql(
+                client=self.client,
+                data=service_dict,
+                branch=self.branch,
+            )
         )
 
         # Move the service as active
-        # TODO: Not happy with ahving this one here...
+        # TODO: Not happy with having this one here...
         self.customer_service.status.value = "active"
         await self.customer_service.save(allow_upsert=True)
 
@@ -50,7 +52,9 @@ class DedicatedInternetGenerator(InfrahubGenerator):
         await self.allocate_vlan()
 
         # Translate teeshirt size to int
-        self.prefix_length: int = IP_PACKAGE_TO_PREFIX_SIZE[self.customer_service.ip_package.value]
+        self.prefix_length: int = IP_PACKAGE_TO_PREFIX_SIZE[
+            self.customer_service.ip_package.value
+        ]
 
         # Allocate the prefix to the service
         await self.allocate_prefix()
@@ -86,7 +90,7 @@ class DedicatedInternetGenerator(InfrahubGenerator):
         # And save it to Infrahub
         await self.allocated_vlan.save(allow_upsert=True)
 
-        self.log.info(f"VLAN `{self.allocated_vlan.display_label}` assigned!")
+        self.log.info(f"VLAN `{self.allocated_vlan.name.value}` assigned!")
 
     async def allocate_prefix(self) -> None:
         """Allocate a prefix coming from a resource pool to the service."""
@@ -140,7 +144,9 @@ class DedicatedInternetGenerator(InfrahubGenerator):
                 await interface.peer.device.fetch()
                 # If the device is "core"
                 if interface.peer.device.peer.role.value == "core":
-                    self.log.info(f"Found {interface.peer.display_label} already allocated to the service.")
+                    self.log.info(
+                        f"Port `{interface.peer.display_label}` already allocated to the service."
+                    )
                     # Big assomption but we assume port is already allocated
                     self.index = interface.peer.device.peer.index.value
                     allocated_port = interface
@@ -160,7 +166,7 @@ class DedicatedInternetGenerator(InfrahubGenerator):
                 role__value="core",
                 index__value=self.index,
             )
-            self.log.info(f"Looking for an interface on {switch}...")
+            self.log.info(f"Looking for port on {switch}...")
 
             # Fetch switch interface data
             await switch.interfaces.fetch()
@@ -179,10 +185,14 @@ class DedicatedInternetGenerator(InfrahubGenerator):
 
             # If we don't have any interface available
             if selected_interface is None:
-                msg: str = f"There is no physical port to allocate to customer on {switch}"
+                msg: str = (
+                    f"There is no physical port to allocate to customer on {switch}"
+                )
                 self.log.exception(msg)
                 raise Exception(msg)
-            self.log.info(f"Found port {selected_interface.peer.display_label} to allocate to the service.")
+            self.log.info(
+                f"Found port {selected_interface.peer.display_label} to allocate to the service."
+            )
             allocated_port = selected_interface
 
         allocated_port = allocated_port.peer
@@ -251,4 +261,5 @@ class DedicatedInternetGenerator(InfrahubGenerator):
         self.allocated_prefix.gateway = self.gateway_ip
 
         # Save prefix
+        await self.allocated_prefix.save(allow_upsert=True)
         await self.allocated_prefix.save(allow_upsert=True)
