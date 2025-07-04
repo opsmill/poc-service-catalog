@@ -34,12 +34,10 @@ class DedicatedInternetGenerator(InfrahubGenerator):
         service_dict: dict = data["ServiceDedicatedInternet"]["edges"][0]["node"]
 
         # Translate the dict to proper object
-        self.customer_service: ServiceDedicatedInternet = (
-            await InfrahubNode.from_graphql(
-                client=self.client,
-                data=service_dict,
-                branch=self.branch,
-            )
+        self.customer_service: ServiceDedicatedInternet = await InfrahubNode.from_graphql(
+            client=self.client,
+            data=service_dict,
+            branch=self.branch,
         )
 
         # Move the service as active
@@ -51,9 +49,7 @@ class DedicatedInternetGenerator(InfrahubGenerator):
         await self.allocate_vlan()
 
         # Translate teeshirt size to int
-        self.prefix_length: int = IP_PACKAGE_TO_PREFIX_SIZE[
-            self.customer_service.ip_package.value
-        ]
+        self.prefix_length: int = IP_PACKAGE_TO_PREFIX_SIZE[self.customer_service.ip_package.value]
 
         # Allocate the prefix to the service
         await self.allocate_prefix()
@@ -143,9 +139,7 @@ class DedicatedInternetGenerator(InfrahubGenerator):
                 await interface.peer.device.fetch()
                 # If the device is "core"
                 if interface.peer.device.peer.role.value == "core":
-                    self.log.info(
-                        f"Port `{interface.peer.display_label}` already allocated to the service."
-                    )
+                    self.log.info(f"Port `{interface.peer.display_label}` already allocated to the service.")
                     # Big assomption but we assume port is already allocated
                     self.index = interface.peer.device.peer.index.value
                     allocated_port = interface
@@ -184,14 +178,10 @@ class DedicatedInternetGenerator(InfrahubGenerator):
 
             # If we don't have any interface available
             if selected_interface is None:
-                msg: str = (
-                    f"There is no physical port to allocate to customer on {switch}"
-                )
+                msg: str = f"There is no physical port to allocate to customer on {switch}"
                 self.log.exception(msg)
                 raise Exception(msg)
-            self.log.info(
-                f"Found port {selected_interface.peer.display_label} to allocate to the service."
-            )
+            self.log.info(f"Found port {selected_interface.peer.display_label} to allocate to the service.")
             allocated_port = selected_interface
 
         allocated_port = allocated_port.peer
