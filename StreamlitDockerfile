@@ -9,12 +9,11 @@ RUN curl -sSL https://install.python-poetry.org | python3 -
 ENV PATH="${PATH}:/root/.local/bin"
 RUN poetry config virtualenvs.create false
 
+# Copy app content
 COPY . /app
 
 # Install dependencies
 RUN poetry install
-
-# Copy the rest of the application
 
 # Expose the port Streamlit uses
 EXPOSE 8501
