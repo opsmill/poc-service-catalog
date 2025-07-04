@@ -1,9 +1,8 @@
 import pytest
 from fast_depends import Provider
-from pytest_httpx import HTTPXMock
 from streamlit.testing.v1 import AppTest
 
-from infrahub_sdk import Config, InfrahubClientSync
+from infrahub_sdk import InfrahubClientSync
 from service_catalog.infrahub import get_client
 
 

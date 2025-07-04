@@ -1,10 +1,12 @@
 import os
+import sys
+
 from pathlib import Path
 
 from invoke import Context, task
 
 CURRENT_DIRECTORY = Path(__file__).resolve()
-
+DOCUMENTATION_DIRECTORY = CURRENT_DIRECTORY.parent / "docs"
 MAIN_DIRECTORY_PATH = Path(__file__).parent
 
 infrahub_address = os.getenv("INFRAHUB_ADDRESS")
@@ -106,3 +108,15 @@ def lint_all(context: Context) -> None:
     lint_yaml(context)
     lint_ruff(context)
     lint_mypy(context)
+
+
+@task(name="docs")
+def docs_build(context: Context) -> None:
+    """Build documentation website."""
+    exec_cmd = "npm run build"
+
+    with context.cd(DOCUMENTATION_DIRECTORY):
+        output = context.run(exec_cmd)
+
+    if output.exited != 0:
+        sys.exit(-1)

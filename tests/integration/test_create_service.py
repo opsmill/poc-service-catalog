@@ -38,6 +38,7 @@ class TestServiceCatalog(TestInfrahubDockerClient):
         """
         Override the client that will be returned by FastDepends.
         """
+
         def get_test_client(branch: str = "main") -> InfrahubClientSync:
             return client_sync
 
@@ -81,7 +82,7 @@ class TestServiceCatalog(TestInfrahubDockerClient):
         Add the local directory as a repository in the infrahub instance in order to validate the import of the repository
         and have the generator operational in infrahub.
         """
-        repo = GitRepo(name="poc-service-catalog", src_directory=root_dir, dst_directory=remote_repos_dir)
+        repo = GitRepo(name="infrahub-demo-service-catalog", src_directory=root_dir, dst_directory=remote_repos_dir)
         await repo.add_to_infrahub(client=client)
         in_sync = await repo.wait_for_sync_to_complete(client=client)
         assert in_sync
