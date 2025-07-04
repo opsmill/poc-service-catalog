@@ -1,3 +1,4 @@
+import os
 import sys
 from pathlib import Path
 
@@ -7,10 +8,15 @@ CURRENT_DIRECTORY = Path(__file__).resolve()
 DOCUMENTATION_DIRECTORY = CURRENT_DIRECTORY.parent / "docs"
 MAIN_DIRECTORY_PATH = Path(__file__).parent
 
+infrahub_address = os.getenv("INFRAHUB_ADDRESS")
+
 
 @task
 def build(context: Context, cache: bool = True) -> None:
-    compose_cmd = "docker compose build "
+    compose_cmd = "docker compose"
+    if infrahub_address:
+        compose_cmd += " -f docker-compose.override.yml"
+    compose_cmd += " build"
     if not cache:
         compose_cmd += " --no-cache"
     with context.cd(MAIN_DIRECTORY_PATH):
@@ -19,7 +25,10 @@ def build(context: Context, cache: bool = True) -> None:
 
 @task
 def start(context: Context, build: bool = False) -> None:
-    compose_cmd = "docker compose up -d"
+    compose_cmd = "docker compose"
+    if infrahub_address:
+        compose_cmd += " -f docker-compose.override.yml"
+    compose_cmd += " up -d"
     if build:
         compose_cmd += " --build"
     with context.cd(MAIN_DIRECTORY_PATH):
@@ -28,21 +37,30 @@ def start(context: Context, build: bool = False) -> None:
 
 @task
 def stop(context: Context) -> None:
-    compose_cmd = "docker compose down"
+    compose_cmd = "docker compose"
+    if infrahub_address:
+        compose_cmd += " -f docker-compose.override.yml"
+    compose_cmd += " down"
     with context.cd(MAIN_DIRECTORY_PATH):
         context.run(compose_cmd, pty=True)
 
 
 @task
 def destroy(context: Context) -> None:
-    compose_cmd = "docker compose down -v"
+    compose_cmd = "docker compose"
+    if infrahub_address:
+        compose_cmd += " -f docker-compose.override.yml"
+    compose_cmd += " down -v"
     with context.cd(MAIN_DIRECTORY_PATH):
         context.run(compose_cmd, pty=True)
 
 
 @task
 def restart(context: Context) -> None:
-    compose_cmd = "docker compose restart"
+    compose_cmd = "docker compose"
+    if infrahub_address:
+        compose_cmd += " -f docker-compose.override.yml"
+    compose_cmd += " restart"
     with context.cd(MAIN_DIRECTORY_PATH):
         context.run(compose_cmd, pty=True)
 

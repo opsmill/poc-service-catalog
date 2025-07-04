@@ -6,7 +6,8 @@ import random
 from infrahub_sdk.generator import InfrahubGenerator
 from infrahub_sdk.node import InfrahubNode
 from infrahub_sdk.protocols import CoreIPPrefixPool, CoreNumberPool
-from service_catalog.protocols_async import (
+
+from ..service_catalog.protocols_async import (  # noqa: TID252
     DcimDevice,
     DcimInterfaceL3,
     IpamIPAddress,
