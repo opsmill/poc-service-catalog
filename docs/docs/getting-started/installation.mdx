@@ -1,5 +1,5 @@
 ---
-title: Demo Installation
+title: Demo installation
 description: Before you can run the demo, you need to install the prerequisites and set up the environment.
 ---
 
@@ -14,7 +14,7 @@ Before you get started, make sure the following tools are installed:
 
 ## Steps
 
-### 1. Clone the Repository
+### 1. Clone the repository
 
 Clone the GitHub repository to the server you will run this demo on.
 
@@ -23,7 +23,7 @@ git clone https://github.com/opsmill/infrahub-demo-service-catalog.git
 cd infrahub-demo-service-catalog
 ```
 
-### 2. Set Environmental Variables
+### 2. Set environmental variables
 
 These environment variables are used to connect to the Infrahub instance and authenticate API requests.
 
@@ -32,7 +32,7 @@ export INFRAHUB_ADDRESS="http://localhost:8000"
 export INFRAHUB_API_TOKEN="06438eb2-8019-4776-878c-0941b1f1d1ec"
 ```
 
-### 3. Install the Dependencies
+### 3. Install the dependencies
 
 Our demos use [Poetry](https://python-poetry.org/) to manage the Python environment.
 
@@ -52,7 +52,7 @@ poetry run invoke start
 
 :::
 
-### 5. Load Schema and Data into Infrahub
+### 5. Load schema and data into Infrahub
 
 These commands will load the schema and data into Infrahub.
 
@@ -61,7 +61,7 @@ poetry run infrahubctl schema load schemas/ --wait 20
 poetry run infrahubctl object load data/
 ```
 
-### 6. Connect Read-Only Repository
+### 6. Connect read-only repository
 
 Infrahub can connect to external repositories to fetch scripts, templates, or other resources. This command connects the demo repository as a read-only source.
 
@@ -71,7 +71,7 @@ poetry run infrahubctl repository add --ref main --read-only infrahub-demo https
 
 ## Confirmation
 
-👉 Log in to [Infrahub UI](http://localhost:8000/login) on port `8000` with username `admin` and password `infrahub`.  
+👉 Log in to [Infrahub UI](http://localhost:8000/login) on port `8000` with username `admin` and password `infrahub`.
 👉 You can connect to [Service Catalog](http://localhost:8501/) on port `8501`.
 
 ## Next Steps
