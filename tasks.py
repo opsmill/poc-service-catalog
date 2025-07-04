@@ -1,6 +1,5 @@
 import os
 import sys
-
 from pathlib import Path
 
 from invoke import Context, task
