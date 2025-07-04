@@ -6,7 +6,6 @@ import random
 from infrahub_sdk.generator import InfrahubGenerator
 from infrahub_sdk.node import InfrahubNode
 from infrahub_sdk.protocols import CoreIPPrefixPool, CoreNumberPool
-
 from service_catalog.protocols_async import (
     DcimDevice,
     DcimInterfaceL3,
@@ -261,5 +260,6 @@ class DedicatedInternetGenerator(InfrahubGenerator):
         self.allocated_prefix.gateway = self.gateway_ip
 
         # Save prefix
+        await self.allocated_prefix.save(allow_upsert=True)
         await self.allocated_prefix.save(allow_upsert=True)
         await self.allocated_prefix.save(allow_upsert=True)
