@@ -1,5 +1,5 @@
 ---
-name: Build and Deploy Docusaurus
+name: CI
 on:
   pull_request:
   push:
@@ -131,7 +131,6 @@ jobs:
         run: "pip install invoke toml"
       - name: "Build docs website"
         run: "invoke docs"
-
 
   validate-documentation-style:
     if: |
