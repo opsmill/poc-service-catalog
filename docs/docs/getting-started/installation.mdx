@@ -1,5 +1,5 @@
 ---
-title: Demo installation
+title: Installation
 description: Before you can run the demo, you need to install the prerequisites and set up the environment.
 ---
 
@@ -16,7 +16,7 @@ Before you get started, make sure the following tools are installed:
 
 ### 1. Clone the repository
 
-Clone the GitHub repository to the server you will run this demo on.
+Clone the GitHub repository.
 
 ```shell
 git clone https://github.com/opsmill/infrahub-demo-service-catalog.git
@@ -63,7 +63,13 @@ poetry run infrahubctl object load data/
 
 ### 6. Connect read-only repository
 
-Infrahub can connect to external repositories to fetch scripts, templates, or other resources. This command connects the demo repository as a read-only source.
+:::info
+
+Infrahub can connect to external repositories to fetch scripts, templates, or other resources. Learn more about [git integration](https://docs.infrahub.app/topics/repository) in the Infrahub documentation.
+
+:::
+
+This command connects the demo repository as a read-only source.
 
 ```shell
 poetry run infrahubctl repository add --ref main --read-only infrahub-demo https://github.com/opsmill/infrahub-demo-service-catalog.git
