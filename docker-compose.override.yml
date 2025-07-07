@@ -3,17 +3,22 @@ x-infrahub-custom-build: &infrahub_custom_build
   image: opsmill/infrahub-demo-service-catalog:${INFRAHUB_BASE_VERSION:-1.3.2}
   build:
     context: .
-    dockerfile: InfrahubDockerfile
+    dockerfile: Dockerfile
     args:
       INFRAHUB_BASE_VERSION: "${INFRAHUB_BASE_VERSION:-1.3.2}"
 
 services:
   service-catalog:
-    build:
-      context: .
-      dockerfile: StreamlitDockerfile
+    <<: *infrahub_custom_build
     environment:
-      INFRAHUB_ADDRESS: ${INFRAHUB_ADDRESS:-http://infrahub-server:8000}
+      INFRAHUB_ADDRESS: http://infrahub-server:8000
       INFRAHUB_API_TOKEN: ${INFRAHUB_API_TOKEN:-44af444d-3b26-410d-9546-b758657e026c}
     ports:
       - 8501:8501
+    command: poetry run streamlit run /opt/local/service_catalog/🏠_Home_Page.py
+  infrahub-server:
+    <<: *infrahub_custom_build
+  task-worker:
+    <<: *infrahub_custom_build
+  task-manager:
+    <<: *infrahub_custom_build
