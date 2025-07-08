@@ -10,6 +10,7 @@ const sidebars: SidebarsConfig = {
       items: [
         'getting-started/installation',
         'getting-started/user-walkthrough',
+        'getting-started/developer-walkthrough',
       ],
     },
   ]
