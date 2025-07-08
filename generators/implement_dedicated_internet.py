@@ -251,5 +251,3 @@ class DedicatedInternetGenerator(InfrahubGenerator):
 
         # Save prefix
         await self.allocated_prefix.save(allow_upsert=True)
-        await self.allocated_prefix.save(allow_upsert=True)
-        await self.allocated_prefix.save(allow_upsert=True)
