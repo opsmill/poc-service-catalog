@@ -9,7 +9,7 @@ DOCUMENTATION_DIRECTORY = CURRENT_DIRECTORY.parent / "docs"
 MAIN_DIRECTORY_PATH = Path(__file__).parent
 
 infrahub_address = os.getenv("INFRAHUB_ADDRESS")
-base_compose_cmd: str = "docker compose -f docker-compose.yml -f docker-compose.override.yml"
+base_compose_cmd: str = "docker compose"
 
 
 @task
