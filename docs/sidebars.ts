@@ -9,7 +9,7 @@ const sidebars: SidebarsConfig = {
       collapsed: false,
       items: [
         'getting-started/installation',
-        'getting-started/walkthrough',
+        'getting-started/user-walkthrough',
       ],
     },
   ]
