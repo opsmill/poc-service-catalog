@@ -128,3 +128,5 @@ vscode
 VSCode
 Yaml
 yamllint
+walkthrough
+Otternet

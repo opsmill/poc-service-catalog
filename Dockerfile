@@ -1,23 +1,13 @@
-# Use an official Python base image
-FROM python:3.12
+# This Dockerfile serves two purposes:
+# 1. It builds a custom Infrahub image with the `service_catalog` python module included. It can now be imported and used within the Infrahub environment (in generators for example).
+# 2. It builds a container that runs streamlit to serve the service catalog web application.
+ARG INFRAHUB_BASE_VERSION=1.3.2
+FROM registry.opsmill.io/opsmill/infrahub:${INFRAHUB_BASE_VERSION}
 
-# Set working directory
-WORKDIR /app
+WORKDIR /opt/local
+COPY pyproject.toml poetry.lock README.md ./
+COPY service_catalog/ service_catalog/
 
-# Install Poetry
-RUN curl -sSL https://install.python-poetry.org | python3 -
-ENV PATH="${PATH}:/root/.local/bin"
-RUN poetry config virtualenvs.create false
+RUN poetry install --no-ansi --no-interaction
 
-COPY . /app
-
-# Install dependencies
-RUN poetry install
-
-# Copy the rest of the application
-
-# Expose the port Streamlit uses
-EXPOSE 8501
-
-# Run the application
-CMD ["poetry", "run", "streamlit", "run", "service_catalog/🏠_Home_Page.py"]
+WORKDIR /source

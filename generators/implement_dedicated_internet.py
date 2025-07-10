@@ -6,8 +6,7 @@ import random
 from infrahub_sdk.generator import InfrahubGenerator
 from infrahub_sdk.node import InfrahubNode
 from infrahub_sdk.protocols import CoreIPPrefixPool, CoreNumberPool
-
-from ..service_catalog.protocols_async import (  # noqa: TID252
+from service_catalog.protocols_async import (
     DcimDevice,
     DcimInterfaceL3,
     IpamIPAddress,
@@ -42,7 +41,7 @@ class DedicatedInternetGenerator(InfrahubGenerator):
         )
 
         # Move the service as active
-        # TODO: Not happy with ahving this one here...
+        # TODO: Not happy with having this one here...
         self.customer_service.status.value = "active"
         await self.customer_service.save(allow_upsert=True)
 
@@ -86,7 +85,7 @@ class DedicatedInternetGenerator(InfrahubGenerator):
         # And save it to Infrahub
         await self.allocated_vlan.save(allow_upsert=True)
 
-        self.log.info(f"VLAN `{self.allocated_vlan.display_label}` assigned!")
+        self.log.info(f"VLAN `{self.allocated_vlan.name.value}` assigned!")
 
     async def allocate_prefix(self) -> None:
         """Allocate a prefix coming from a resource pool to the service."""
@@ -140,7 +139,7 @@ class DedicatedInternetGenerator(InfrahubGenerator):
                 await interface.peer.device.fetch()
                 # If the device is "core"
                 if interface.peer.device.peer.role.value == "core":
-                    self.log.info(f"Found {interface.peer.display_label} already allocated to the service.")
+                    self.log.info(f"Port `{interface.peer.display_label}` already allocated to the service.")
                     # Big assomption but we assume port is already allocated
                     self.index = interface.peer.device.peer.index.value
                     allocated_port = interface
@@ -160,7 +159,7 @@ class DedicatedInternetGenerator(InfrahubGenerator):
                 role__value="core",
                 index__value=self.index,
             )
-            self.log.info(f"Looking for an interface on {switch}...")
+            self.log.info(f"Looking for port on {switch}...")
 
             # Fetch switch interface data
             await switch.interfaces.fetch()
